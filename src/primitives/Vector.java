@@ -3,11 +3,17 @@ package primitives;
 public class Vector extends Point {
     public Vector(double x, double y, double z) {
         super(x, y, z);
-        if (coordinates.equals(Double3.ZERO))
+        if (xyz.equals(Double3.ZERO))
         {
             throw new IllegalArgumentException("zero vector is not allowed");
         }
     }
+
+    @Override
+    public String toString() {
+        return "Vector{}";
+    }
+
     public Vector(Double3 d)
     {
         this(d.d1, d.d2, d.d3);
@@ -22,20 +28,24 @@ public class Vector extends Point {
     }
     public Vector scale(double num)
     {
-        return new Vector(coordinates.scale(num));
+        return new Vector(xyz.scale(num));
     }
     public double dotProduct(Vector vec)
     {
-        Double3 d = coordinates.product(vec.coordinates);
+        Double3 d = xyz.product(vec.xyz);
         return d.d1 + d.d2 + d.d3;
     }
-    public double lengthSquered()
+    public Vector crossProduct(Vector vec)
+    {
+        return new Vector(1, 1, 1); /*#*/
+    }
+    public double lengthSquared()
     {
         return this.dotProduct(this);
     }
     public double length()
     {
-        return Math.sqrt(this.lengthSquered());
+        return Math.sqrt(this.lengthSquared());
     }
     public Vector normalize()
     {
