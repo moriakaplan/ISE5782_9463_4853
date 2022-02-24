@@ -8,17 +8,17 @@ public class Vector extends Point {
         }
     }
 
+    Vector(Double3 d) {
+        this(d.d1, d.d2, d.d3);
+    }
+
     @Override
     public String toString() {
         return "Vector{}";
     }
 
-    public Vector(Double3 d) {
-        this(d.d1, d.d2, d.d3);
-    }
-
     public Vector subtract(Vector other) {
-        return super.subtract((Point) other); /*#*/
+        return super.subtract(other); /*#*/
     }
 
     public Vector add(Vector vec) {

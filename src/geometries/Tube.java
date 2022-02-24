@@ -2,8 +2,8 @@ package geometries;
 import primitives.*;
 
 public class Tube implements Geometry{
-    Ray axisRay;
-    double radius;
+    protected Ray axisRay;
+    protected double radius;
 
     public Tube(Ray axisRay, double radius) {
         if (radius <= 0)
