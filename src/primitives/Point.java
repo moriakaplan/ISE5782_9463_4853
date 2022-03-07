@@ -3,13 +3,13 @@ package primitives;
 import java.util.Objects;
 
 /**
- * This class represents a point in three-dimensional space.
+ * This class represents a point in three-dimensional space by using class Double3.
  */
 public class Point {
-    protected final Double3 xyz;
+    final Double3 xyz;
 
     /**
-     * Constructor to initialize Double3 based object with its three number values
+     * Constructor to initialize point based object with its three number values
      *
      * @param x first number value
      * @param y second number value
@@ -20,32 +20,12 @@ public class Point {
     }
 
     /**
-     * Constructor to initialize Double3 based object with Double3 coordinate
+     * Constructor to initialize point based object with Double3 coordinate
      *
-     * @param d Double3 value value
+     * @param d Double3 value
      */
     Point(Double3 d) {
         this.xyz = new Double3(d.d1, d.d1, d.d3);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Point point = (Point) o;
-        return xyz.equals(point.xyz);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(xyz);
-    }
-
-    @Override
-    public String toString() {
-        return "Point{" +
-                "coordinates=" + xyz +
-                '}';
     }
 
     /**
@@ -69,7 +49,7 @@ public class Point {
     }
 
     /**
-     * Calculate the  distance squared between two floating points
+     * Calculate the distance squared between two floating points
      *
      * @param other point for calculate the distance to
      * @return the distance to another point
@@ -87,5 +67,25 @@ public class Point {
      */
     public double distance(Point other) {
         return Math.sqrt(this.distanceSquared(other));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Point point = (Point) o;
+        return xyz.equals(point.xyz);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(xyz);
+    }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "coordinates=" + xyz +
+                '}';
     }
 }
