@@ -6,8 +6,8 @@ import java.util.Objects;
  * this class represents a ray in three-dimensional space by point and vector from the point.
  */
 public class Ray {
-    private Point p0;
-    private Vector dir;
+    private final Point p0;
+    private final Vector dir;
 
     /**
      * Constructor- initialize the data according a point and normalize vector.
@@ -20,16 +20,16 @@ public class Ray {
     }
 
     /**
-     *
-     * @return
+     * getter for field p0.
+     * @return the point that is the beginning of the ray.
      */
     public Point getP0() {
         return p0;
     }
 
     /**
-     *
-     * @return
+     * getter for field dir
+     * @return the direction vector (normalize) of the ray.
      */
     public Vector getDir() {
         return dir;

@@ -8,7 +8,7 @@ import primitives.Vector;
  * a cylinder object in the space, extend of class Tube
  */
 public class Cylinder extends Tube{
-    private double height;
+    private final double height;
 
     /**
      * constructor for initialize data by radius, height and center axis.

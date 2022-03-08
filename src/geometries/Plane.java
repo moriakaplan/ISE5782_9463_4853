@@ -7,8 +7,8 @@ import primitives.Vector;
  * This class represents a plane in three-dimensional space by point on the plane and vertical vector.
  */
 public class Plane implements Geometry {
-    private Point q0;
-    private Vector normal;
+    private final Point q0;
+    private final Vector normal;
 
     /**
      * Constructor with point on the plane and normal vector.

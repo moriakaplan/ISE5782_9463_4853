@@ -7,8 +7,8 @@ import primitives.Vector;
  * This class represents a sphere in the space by center point and radius.
  */
 public class Sphere implements Geometry{
-    private Point center;
-    private double radius;
+    private final Point center;
+    private final double radius;
 
     /**
      * constructor for initialize the sphere data.
