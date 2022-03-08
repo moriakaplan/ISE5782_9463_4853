@@ -29,6 +29,7 @@ public final class Main {
 		// test length..
 		if (!isZero(v1.lengthSquared() - 14))
 			out.println("ERROR: lengthSquared() wrong value");
+
 		if (!isZero(new Vector(0, 3, 4).length() - 5))
 			out.println("ERROR: length() wrong value");
 
