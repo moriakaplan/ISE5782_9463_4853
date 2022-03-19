@@ -45,9 +45,14 @@ public class Cylinder extends Tube{
         Point p0 = axisRay.getP0();
         Vector v = axisRay.getDir();
         Point secondEdgeP=p0.add(v.scale(height));
-        if(p.subtract(p0).dotProduct(v) == 0) //for the case when the point is on the base of the cylinder.
+        //***
+        //if(p.subtract(p0).dotProduct(v) == 0) //for the case when the point is on the base of the cylinder.
+        //    return v.scale(-1);
+        //if(p.subtract(secondEdgeP).dotProduct(v) ==0 ) //for the case when the point is on the second base of the cylinder.
+        //    return v;
+        if(p.distance(p0) < radius) //for the case when the point is on the base of the cylinder.
             return v.scale(-1);
-        if(p.subtract(secondEdgeP).dotProduct(v) ==0 ) //for the case when the point is on the second base of the cylinder.
+        if(p.distance(secondEdgeP) < radius) //for the case when the point is on the second base of the cylinder.
             return v;
         return super.getNormal(p);
     }

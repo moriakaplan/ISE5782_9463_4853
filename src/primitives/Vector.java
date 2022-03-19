@@ -40,12 +40,12 @@ public class Vector extends Point {
     }
 
     /**
-     * add another vector from this vector.
+     * add another vector to this vector.
      * @param vec right handle side operand for addition
      * @return vector- the result of the addition.
      */
     public Vector add(Vector vec) {
-        return (Vector) super.add(vec);
+        return new Vector(super.add(vec).xyz);
     }
 
     /**
@@ -87,7 +87,9 @@ public class Vector extends Point {
      * @return the length squared of the vector.
      */
     public double lengthSquared() {
-        return this.dotProduct(this);
+        //***
+        //return this.dotProduct(this);
+        return this.distanceSquared(new Point(0, 0, 0));
     }
 
     /**

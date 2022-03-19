@@ -13,22 +13,25 @@ class VectorTest {
 
     @Test
     void testSubtract() {
+        // ============ Equivalence Partitions Tests ==============
         // TC01: Test operations with points and vectors- subtract.
         assertEquals(
-                new Vector(1, 1, 1), new Point(2, 3, 4).subtract(p1),
-                "ERROR: Point - Point does not work correctly");
+                new Vector(1, 1, 1), new Vector(2, 3, 4).subtract(p1),
+                "ERROR: Function add in Vector does not work correctly");
     }
 
     @Test
     void testAdd() {
+        // ============ Equivalence Partitions Tests ==============
         // TC01: Test operations with points and vectors- add.
         assertEquals(
-                p1.add(new Vector(-1, -2, -3)), new Point(0, 0, 0),
-                "ERROR: Point + Vector does not work correctly");
+                v1.add(new Vector(-1, -2, -2)), new Vector(0, 0, 1),
+                "ERROR: function add does not work correctly");
     }
 
     @Test
     void testScale() {
+        // ============ Equivalence Partitions Tests ==============
         // TC01: test scale.
         assertEquals(
                 v2, v1.scale(-2),
@@ -37,26 +40,27 @@ class VectorTest {
 
     @Test
     void testDotProduct() {
-        // TC01: test Dot-Product for orthogonal vectors.
-        assertTrue(isZero(v1.dotProduct(v3)),
-            "ERROR: dotProduct() for orthogonal vectors is not zero");
-        // TC02: test Dot-Product.
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: test Dot-Product.
         assertTrue(isZero(v1.dotProduct(v2) + 28),
             "ERROR: dotProduct() wrong value");
+
+        // =============== Boundary Values Tests ==================
+        // TC11: test Dot-Product for orthogonal vectors.
+        assertTrue(isZero(v1.dotProduct(v3)),
+                "ERROR: dotProduct() for orthogonal vectors is not zero");
     }
 
     @Test
     void testCrossProduct() {
-        Vector v1 = new Vector(1, 2, 3);
 
         // ============ Equivalence Partitions Tests ==============
-        Vector v2 = new Vector(0, 3, -2);
-        Vector vr = v1.crossProduct(v2);
+        Vector vr = v1.crossProduct(v3);
 
         // TC01: Test that length of cross-product is proper (orthogonal vectors taken
         // for simplicity)
         assertEquals(
-                v1.length() * v2.length(), vr.length(),
+                v1.length() * v3.length(), vr.length(),
                 0.00001,
                 "crossProduct() wrong result length");
 
@@ -65,21 +69,22 @@ class VectorTest {
                 isZero(vr.dotProduct(v1)),
                 "crossProduct() result is not orthogonal to 1st operand");
         assertTrue(
-                isZero(vr.dotProduct(v2)),
+                isZero(vr.dotProduct(v3)),
                 "crossProduct() result is not orthogonal to 2nd operand");
 
         // =============== Boundary Values Tests ==================
         // TC11: test zero vector from cross-product of co-lined vectors
-        Vector v3 = new Vector(-2, -4, -6);
+        Vector v4 = new Vector(-2, -4, -6);
         assertThrows(
                 IllegalArgumentException.class,
-                () -> v1.crossProduct(v3),
+                () -> v1.crossProduct(v4),
                 "crossProduct() for parallel vectors does not throw an exception");
 
     }
 
     @Test
     void testLengthSquared() {
+        // ============ Equivalence Partitions Tests ==============
         // TC01: test lengthSquared.
         assertTrue(
                 isZero(v1.lengthSquared() - 14),
@@ -88,6 +93,7 @@ class VectorTest {
 
     @Test
     void testLength() {
+        // ============ Equivalence Partitions Tests ==============
         // TC01: test length.
         assertTrue(isZero(new Vector(0, 3, 4).length() - 5),
             "ERROR: length() wrong value");
@@ -95,6 +101,8 @@ class VectorTest {
 
     @Test
     void testNormalize() {
+        // ============ Equivalence Partitions Tests ==============
+
         Vector u = v1.normalize();
 
         // TC01: test vector normalization vs vector length.

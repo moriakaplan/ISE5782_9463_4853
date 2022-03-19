@@ -28,7 +28,8 @@ public class Plane implements Geometry {
      */
     public Plane(Point p1, Point p2, Point p3) {
         this.q0 = p1;
-        this.normal = (p1.subtract(p2)). crossProduct (p1.subtract(p3));
+        //***
+        this.normal = (p1.subtract(p2)). crossProduct (p1.subtract(p3)).normalize();
     }
 
     /**
