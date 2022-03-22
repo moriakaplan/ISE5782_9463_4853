@@ -84,9 +84,7 @@ public class Point {
 
     @Override
     public String toString() {
-        return "Point{" +
-                "coordinates=" + xyz +
-                '}';
+        return "Point " + xyz;
     }
 
 

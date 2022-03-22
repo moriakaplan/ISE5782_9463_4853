@@ -11,6 +11,9 @@ class VectorTest {
     Vector v3 = new Vector(0, 3, -2);
     Point p1 = new Point(1, 2, 3);
 
+    /**
+     * Test method for {@link primitives.Vector#subtract(primitives.Vector)}.
+     */
     @Test
     void testSubtract() {
         // ============ Equivalence Partitions Tests ==============
@@ -20,6 +23,9 @@ class VectorTest {
                 "ERROR: Function add in Vector does not work correctly");
     }
 
+    /**
+     * Test method for {@link primitives.Vector#add(primitives.Vector)}.
+     */
     @Test
     void testAdd() {
         // ============ Equivalence Partitions Tests ==============
@@ -29,6 +35,9 @@ class VectorTest {
                 "ERROR: function add does not work correctly");
     }
 
+    /**
+     * Test method for {@link primitives.Vector#scale(double)}.
+     */
     @Test
     void testScale() {
         // ============ Equivalence Partitions Tests ==============
@@ -38,6 +47,9 @@ class VectorTest {
                 "ERROR: scale() does not work correctly");
     }
 
+    /**
+     * Test method for {@link primitives.Vector#dotProduct(primitives.Vector)}
+     */
     @Test
     void testDotProduct() {
         // ============ Equivalence Partitions Tests ==============
@@ -51,6 +63,9 @@ class VectorTest {
                 "ERROR: dotProduct() for orthogonal vectors is not zero");
     }
 
+    /**
+     * Test method for {@link primitives.Vector#crossProduct(primitives.Vector)}
+     */
     @Test
     void testCrossProduct() {
 
@@ -82,6 +97,9 @@ class VectorTest {
 
     }
 
+    /**
+     * Test method for {@link Vector#lengthSquared()}
+     */
     @Test
     void testLengthSquared() {
         // ============ Equivalence Partitions Tests ==============
@@ -91,6 +109,9 @@ class VectorTest {
                 "ERROR: lengthSquared() wrong value");
     }
 
+    /**
+     * Test method for {@link primitives.Vector#length())}
+     */
     @Test
     void testLength() {
         // ============ Equivalence Partitions Tests ==============
@@ -99,6 +120,9 @@ class VectorTest {
             "ERROR: length() wrong value");
     }
 
+    /**
+     * Test method for {@link primitives.Vector#normalize()}
+     */
     @Test
     void testNormalize() {
         // ============ Equivalence Partitions Tests ==============

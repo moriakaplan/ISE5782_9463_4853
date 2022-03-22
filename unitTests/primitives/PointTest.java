@@ -8,6 +8,9 @@ import static primitives.Util.isZero;
 class PointTest {
     Point p1 = new Point(1, 2, 3);
 
+    /**
+     * Test method for {@link primitives.Point#subtract(Point)}
+     */
     @Test
     void testSubtract() {
         // ============ Equivalence Partitions Tests ==============
@@ -17,6 +20,9 @@ class PointTest {
                 "ERROR: Function add in Point does not work correctly");
     }
 
+    /**
+     * Test method for {@link primitives.Point#add(Vector)}
+     */
     @Test
     void testAdd() {
         // ============ Equivalence Partitions Tests ==============
@@ -26,6 +32,9 @@ class PointTest {
                 "ERROR: Point + Vector does not work correctly in function add");
     }
 
+    /**
+     * Test method for {@link primitives.Point#distanceSquared(Point)}
+     */
     @Test
     void testDistanceSquared() {
         // ============ Equivalence Partitions Tests ==============
@@ -35,6 +44,9 @@ class PointTest {
                 "ERROR: distanceSquared() wrong value");
     }
 
+    /**
+     * Test method for {@link primitives.Point#distance(Point)}
+     */
     @Test
     void testDistance() {
         // ============ Equivalence Partitions Tests ==============
