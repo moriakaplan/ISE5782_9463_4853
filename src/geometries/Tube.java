@@ -1,6 +1,9 @@
 package geometries;
 import primitives.*;
 
+import static primitives.Util.isZero;
+
+
 /**
  * This class represents an infinity Tube in three-dimensional space by the center axis of the tube (ray) and its radius.
  */
@@ -55,7 +58,9 @@ public class Tube implements Geometry{
         Vector v = axisRay.getDir();
         Point p0 = axisRay.getP0();
         double t = v.dotProduct(p.subtract(p0));
-        Point center = p0.add(v.scale(t));
+        Point center;
+        if(isZero(t)) center = p0;
+        else center = p0.add(v.scale(t));
         return p.subtract(center).normalize();
     }
 }

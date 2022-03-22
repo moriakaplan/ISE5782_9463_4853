@@ -87,9 +87,8 @@ public class Vector extends Point {
      * @return the length squared of the vector.
      */
     public double lengthSquared() {
-        //***
-        //return this.dotProduct(this);
-        return this.distanceSquared(new Point(0, 0, 0));
+        return this.dotProduct(this);
+        //return this.distanceSquared(new Point(0, 0, 0));
     }
 
     /**
