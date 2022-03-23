@@ -77,15 +77,15 @@ class VectorTest {
         assertEquals(
                 v1.length() * v3.length(), vr.length(),
                 0.00001,
-                "crossProduct() wrong result length");
+                "ERROR: crossProduct() wrong result length");
 
         // TC02: Test cross-product result orthogonality to its operands
         assertTrue(
                 isZero(vr.dotProduct(v1)),
-                "crossProduct() result is not orthogonal to 1st operand");
+                "ERROR: crossProduct() result is not orthogonal to 1st operand");
         assertTrue(
                 isZero(vr.dotProduct(v3)),
-                "crossProduct() result is not orthogonal to 2nd operand");
+                "ERROR: crossProduct() result is not orthogonal to 2nd operand");
 
         // =============== Boundary Values Tests ==================
         // TC11: test zero vector from cross-product of co-lined vectors
@@ -93,7 +93,7 @@ class VectorTest {
         assertThrows(
                 IllegalArgumentException.class,
                 () -> v1.crossProduct(v4),
-                "crossProduct() for parallel vectors does not throw an exception");
+                "ERROR: crossProduct() for parallel vectors does not throw an exception");
 
     }
 

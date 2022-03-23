@@ -4,6 +4,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.List;
+
 /**
  * a cylinder object in the space, extend of class Tube
  */
@@ -45,15 +47,20 @@ public class Cylinder extends Tube{
         Point p0 = axisRay.getP0();
         Vector v = axisRay.getDir();
         Point secondEdgeP=p0.add(v.scale(height));
-        //***
-        //if(p.subtract(p0).dotProduct(v) == 0) //for the case when the point is on the base of the cylinder.
-        //    return v.scale(-1);
-        //if(p.subtract(secondEdgeP).dotProduct(v) ==0 ) //for the case when the point is on the second base of the cylinder.
-        //    return v;
-        if(p.distance(p0) < radius) //for the case when the point is on the base of the cylinder.
+        if(p.subtract(p0).dotProduct(v) == 0) //for the case when the point is on the base of the cylinder.
             return v.scale(-1);
-        if(p.distance(secondEdgeP) < radius) //for the case when the point is on the second base of the cylinder.
+        if(p.subtract(secondEdgeP).dotProduct(v) ==0 ) //for the case when the point is on the second base of the cylinder.
             return v;
+        //second way to do the checking
+        //if(p.distance(p0) < radius) //for the case when the point is on the base of the cylinder.
+        //    return v.scale(-1);
+        //if(p.distance(secondEdgeP) < radius) //for the case when the point is on the second base of the cylinder.
+        //    return v;
         return super.getNormal(p);
+    }
+
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return null;
     }
 }
