@@ -1,7 +1,10 @@
 package geometries;
 
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
 
 /**
  * This class represents a plane in three-dimensional space by point on the plane and vertical vector.
@@ -64,5 +67,9 @@ public class Plane implements Geometry {
     @Override
     public Vector getNormal(Point p) {
         return normal;
+    }
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return null;
     }
 }

@@ -29,6 +29,31 @@ public class Point {
     }
 
     /**
+     * getter for the first coordinate of xyz
+     * @return the first coordinate of xyz
+     */
+    public double getX()
+    {
+        return xyz.d1;
+    }/**
+     * getter for the second coordinate of xyz
+     * @return the second coordinate of xyz
+     */
+    public double getY()
+    {
+        return xyz.d2;
+    }/**
+     * getter for the third coordinate of xyz
+     * @return the third coordinate of xyz
+     */
+    public double getZ()
+    {
+        return xyz.d3;
+    }
+
+
+
+    /**
      * Subtract two floating point triads into a new triad where each couple of
      * @param other right handle side operand for addition
      * @return result of add

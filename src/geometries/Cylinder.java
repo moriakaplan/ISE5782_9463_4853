@@ -4,6 +4,8 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.List;
+
 /**
  * a cylinder object in the space, extend of class Tube
  */
@@ -55,5 +57,10 @@ public class Cylinder extends Tube{
         //if(p.distance(secondEdgeP) < radius) //for the case when the point is on the second base of the cylinder.
         //    return v;
         return super.getNormal(p);
+    }
+
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return null;
     }
 }

@@ -1,6 +1,8 @@
 package geometries;
 import primitives.*;
 
+import java.util.List;
+
 import static primitives.Util.isZero;
 
 
@@ -62,5 +64,9 @@ public class Tube implements Geometry{
         if(isZero(t)) center = p0;
         else center = p0.add(v.scale(t));
         return p.subtract(center).normalize();
+    }
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return null;
     }
 }
