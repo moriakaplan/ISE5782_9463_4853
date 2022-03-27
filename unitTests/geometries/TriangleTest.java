@@ -34,9 +34,9 @@ class TriangleTest {
         Triangle t=new Triangle(new Point(1,0,0), new Point(0,2,0), new Point(0,0,3));
         // ============ Equivalence Partitions Tests ==============
         // TC01: Ray intersects the plane and the intersection is inside the triangle.
-        List<Point> result = t.findIntersections(new Ray(new Point(0,0,0), new Vector(1,2,2)));
+        List<Point> result = t.findIntersections(new Ray(new Point(0.1,0.2,0.2), new Vector(1,2,2)));
         assertEquals(result.get(0),
-                new Point(0.375,0.75,75),
+                new Point(0.375,0.75,0.75),
                 "ERROR: function indIntersections() of Triangle does not work correctly");
         // TC02: Ray intersects the plane and the intersection is outside the triangle against edge.
         result = t.findIntersections(new Ray(new Point(0,0,-2), new Vector(1,2,2)));
@@ -52,7 +52,7 @@ class TriangleTest {
         //**** Group: Ray intersects the plane
 
         // TC11: Ray intersects the plane and the intersection is on edge.
-        result = t.findIntersections(new Ray(new Point(0,0,0), new Vector(1,2,0)));
+        result = t.findIntersections(new Ray(new Point(0.1,0.2,0), new Vector(1,2,0)));
         assertNull(result,
                 "ERROR: function indIntersections() of Triangle does not work correctly");
         // TC12: Ray intersects the plane and the intersection is in vertex.
