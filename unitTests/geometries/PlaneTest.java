@@ -59,22 +59,25 @@ class PlaneTest {
                 "ERROR: function getNormal() of Plane does not work correctly");
     }
 
-    /** test method for {@link geometries.Plane#findIntersections(Ray)} */
+    /**
+     * test method for {@link geometries.Plane#findIntersections(Ray)}
+     */
     @Test
     void testFindIntersections() {
+        Plane pl = new Plane(new Point(1,0,0),new Vector(0,0,1));
+
+
         // ============ Equivalence Partitions Tests ==============
         // TC01: Ray intersects the plane
-        Plane pl = new Plane(new Point(1,0,0),new Vector(0,0,1));
         List<Point> result = pl.findIntersections(new Ray(new Point(1,1,1), new Vector(-1,-2,-3)));
         assertEquals(result.get(0),
-                new Point(0.67,0.33,0),
+                new Point(0.6666666666666667,0.33333333333333337,0.0),
                 "ERROR: function indIntersections() of Plane does not work correctly");
 
         // TC02: Ray does not intersect the plane
         result = pl.findIntersections(new Ray(new Point(1,1,1), new Vector(1,2,3)));
         assertNull(result,
                 "ERROR: function indIntersections() of Plane does not work correctly");
-
 
         // =============== Boundary Values Tests ==================
 

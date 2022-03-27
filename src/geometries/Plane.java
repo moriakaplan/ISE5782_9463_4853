@@ -4,7 +4,10 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.LinkedList;
 import java.util.List;
+
+import static primitives.Util.*;
 
 /**
  * This class represents a plane in three-dimensional space by point on the plane and vertical vector.
@@ -68,9 +71,17 @@ public class Plane implements Geometry {
     public Vector getNormal(Point p) {
         return normal;
     }
+
     @Override
     public List<Point> findIntersections(Ray ray) {
-        return null;
+        Point p0 = ray.getP0();
+        Vector v = ray.getDir();
+        if(q0.equals(p0) || isZero(v.dotProduct(normal))) return null;
+        double t = alignZero(normal.dotProduct(q0.subtract(p0)) / normal.dotProduct(v)); // t = n(q0-p0) / n*v
+        if(t <= 0) return null;
+        List<Point> l = new LinkedList<Point>();
+        l.add(p0.add(v.scale(t))); // p = p0+t*v
+        return l;
     }
 
 }
