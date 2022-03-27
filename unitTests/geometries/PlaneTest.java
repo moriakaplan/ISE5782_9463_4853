@@ -72,7 +72,7 @@ class PlaneTest {
 
         // TC02: Ray does not intersect the plane
         result = pl.findIntersections(new Ray(new Point(1,1,1), new Vector(1,2,3)));
-        assertNull(result.get(0),
+        assertNull(result,
                 "ERROR: function indIntersections() of Plane does not work correctly");
 
 
@@ -81,12 +81,12 @@ class PlaneTest {
         //**** Group: Ray is parallel to the plane
         // TC11: Ray is parallel to the plane and included in the plane
         result = pl.findIntersections(new Ray(new Point(-1,0,0), new Vector(1,0,0)));
-        assertNull(result.get(0),
+        assertNull(result,
                 "ERROR: TC11- Ray is parallel to the plane and included in the plane");
 
         // TC12: Ray is parallel to the plane and not included in the plane
         result = pl.findIntersections(new Ray(new Point(0,0,1), new Vector(1,0,0)));
-        assertNull(result.get(0),
+        assertNull(result,
                 "ERROR: TC12- Ray is parallel to the plane and not included in the plane");
 
 
@@ -99,24 +99,24 @@ class PlaneTest {
 
         //TC14: Ray is orthogonal to the plane and p0 in the plane
         result = pl.findIntersections(new Ray(new Point(-1,-1,0), new Vector(0,0,1)));
-        assertNull(result.get(0),
+        assertNull(result,
                 "ERROR: TC14- Ray is orthogonal to the plane and p0 in the plane");
 
         //TC15: Ray is orthogonal to the plane and p0 after the plane
         result = pl.findIntersections(new Ray(new Point(-1,-1,1), new Vector(0,0,1)));
-        assertNull(result.get(0),
+        assertNull(result,
                 "ERROR: TC15- ay is orthogonal to the plane and p0 after the plane");
 
 
         //**** Group: Ray begins at the plane
         //TC16: Ray is neither orthogonal nor parallel to and begins at the plane
         result = pl.findIntersections(new Ray(new Point(0,1,0), new Vector(1,2,1)));
-        assertNull(result.get(0),
+        assertNull(result,
                 "ERROR: TC16- Ray is neither orthogonal nor parallel to and begins at the plane");
 
         //TC17: Ray is neither orthogonal nor parallel to the plane and begins at q0
         result = pl.findIntersections(new Ray(new Point(1,0,0), new Vector(1,2,1)));
-        assertNull(result.get(0),
+        assertNull(result,
                 "ERROR: TC17- Ray is neither orthogonal nor parallel to and begins at q0");
     }
 }
