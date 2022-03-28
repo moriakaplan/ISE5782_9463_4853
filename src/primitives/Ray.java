@@ -35,6 +35,15 @@ public class Ray {
         return dir;
     }
 
+    /**
+     * find point on the ray according its distance from the beginning of the ray.
+     * @param t distance from the beginning of the ray.
+     * @return point on the ray.
+     */
+    public Point getPoint(double t){
+        return p0.add(dir.scale(t));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
