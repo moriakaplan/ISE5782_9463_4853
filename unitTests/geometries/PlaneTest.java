@@ -66,7 +66,6 @@ class PlaneTest {
     void testFindIntersections() {
         Plane pl = new Plane(new Point(1,0,0),new Vector(0,0,1));
 
-
         // ============ Equivalence Partitions Tests ==============
         // TC01: Ray intersects the plane
         List<Point> result = pl.findIntersections(new Ray(new Point(1,1,1), new Vector(-1,-2,-3)));
