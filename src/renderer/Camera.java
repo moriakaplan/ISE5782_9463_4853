@@ -66,15 +66,31 @@ public class Camera {
     }
 
     /**
+     * find the color that specific ray encounter.
      *
+     * @param ray ray in the space.
+     * @return the color that the ray encounter.
+     */
+    private Color castRay(Ray ray) {
+        return rayTracer.traceRay(ray);
+    }
+
+    /**
+     * create the image- write the color of every pixel in of the view plane and save it.
      */
     public void renderImage() {
         if (location == null || vTo == null || vUp == null || vRight == null ||
                 height == 0 || width == 0 || distance == 0 ||
                 imageWriter == null || rayTracer == null) {
-            throw new MissingResourceException();
+            throw new MissingResourceException("can't render image because one of the fields of the camera is null", "", "");
         }
-        throw new UnsupportedOperationException("")
+        int Nx = imageWriter.getNx(), Ny = imageWriter.getNy();
+        for (int i = 0; i < Ny; i++) {
+            for (int j = 0; j < Nx; j++) {
+                Ray ray = constructRay(Nx, Ny, j, i);
+                imageWriter.writePixel(j, i, castRay(ray));
+            }
+        }
     }
 
     /**
@@ -84,21 +100,22 @@ public class Camera {
      * @param color    the color of the lines.
      */
     public void printGrid(int interval, Color color) {
-        if (imageWriter == null) throw new MissingResourceException();
+        if (imageWriter == null)
+            throw new MissingResourceException("can't create a grid because field imageWriter of the camera is null", "ImageWriter", "");
         for (int i = 0; i < imageWriter.getNy(); i++) {
             for (int j = 0; j < imageWriter.getNx(); j++) {
                 if (i % interval == 0 || j % interval == 0)
                     imageWriter.writePixel(j, i, color);
             }
         }
-        writeToImage();
     }
 
     /**
      * call the method writeToImage() of the imageWriter.
      */
     public void writeToImage() {
-        if (imageWriter == null) throw new MissingResourceException();
+        if (imageWriter == null)
+            throw new MissingResourceException("can't writr the image because field imageWriter of the camera is null", "ImageWriter", "");
         imageWriter.writeToImage();
     }
 

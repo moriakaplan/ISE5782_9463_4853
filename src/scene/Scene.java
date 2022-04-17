@@ -4,7 +4,66 @@ import geometries.Geometries;
 import lighting.AmbientLight;
 import primitives.Color;
 
+/**
+ * class scene- include the name, background, ambient light and geometries of the scene
+ */
 public class Scene {
+    public String name;
+    public Color background;
+    public AmbientLight ambientLight;
+    public Geometries geometries;
+
+    /**
+     * constructor- set the name of the scene and create empty list of geometries.
+     * @param name the name of the scene
+     */
+    public Scene(String name) {
+        this.name = name;
+        geometries=new Geometries();
+    }
+
+    /**
+     * setter for field name in builder template.
+     * @param name the name of the scene.
+     * @return the scene object.
+     */
+    public Scene setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    /**
+     * setter for field background in builder template.
+     * @param background the background of the scene.
+     * @return the scene object.
+     */
+    public Scene setBackground(Color background) {
+        this.background = background;
+        return this;
+    }
+
+    /**
+     * setter for field ambientLight in builder template.
+     * @param ambientLight the ambient light of the scene.
+     * @return the scene object.
+     */
+    public Scene setAmbientLight(AmbientLight ambientLight) {
+        this.ambientLight = ambientLight;
+        return this;
+    }
+
+    /**
+     * setter for field geometries in builder template.
+     * @param geometries the geometries of the scene.
+     * @return the scene object.
+     */
+    public Scene setGeometries(Geometries geometries) {
+        this.geometries = geometries;
+        return this;
+    }
+
+
+    /* builder- class scene
     private final String name;
     private final Color background;
     private final AmbientLight ambientLight;
@@ -32,7 +91,9 @@ public class Scene {
     public Geometries getGeometries() {
         return geometries;
     }
+    */
 
+    /* builder- sceneBuilder
     public static class SceneBuilder {
         private final String name;
         private Color background = Color.BLACK;
@@ -59,5 +120,5 @@ public class Scene {
             //... what should we do here?
             return scene;
         }
-    }
+    }*/
 }
