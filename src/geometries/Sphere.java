@@ -12,7 +12,7 @@ import static primitives.Util.alignZero;
 /**
  * This class represents a sphere in the space by center point and radius.
  */
-public class Sphere implements Geometry {
+public class Sphere extends Geometry {
     private final Point center;
     private final double radius;
 
@@ -78,5 +78,26 @@ public class Sphere implements Geometry {
         if (t2 <= 0)
             return List.of(ray.getPoint(t1));
         return List.of(ray.getPoint(t1), ray.getPoint(t2));
+    }
+
+    @Override
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        Point p0 = ray.getP0();
+        if (center.equals(p0))
+            return List.of(new GeoPoint(this, ray.getPoint(radius)));
+        Vector u = center.subtract(p0);
+        double tM = u.dotProduct(ray.getDir());
+        double d = sqrt(u.lengthSquared() - tM * tM);
+        if (alignZero(d - radius) >= 0) return null;
+        double tH = sqrt(radius * radius - d * d);
+        double t1 = alignZero(tM + tH);
+        if (t1 <= 0)
+            return null;
+        double t2 = alignZero(tM - tH);
+        if (t2 <= 0)
+            return List.of(new GeoPoint(this, ray.getPoint(t1)));
+        return List.of(
+                new GeoPoint(this, ray.getPoint(t1)),
+                new GeoPoint(this, ray.getPoint(t2)));
     }
 }

@@ -9,7 +9,7 @@ import static primitives.Util.isZero;
 /**
  * This class represents an infinity Tube in three-dimensional space by the center axis of the tube (ray) and its radius.
  */
-public class Tube implements Geometry{
+public class Tube extends Geometry{
     protected Ray axisRay;
     protected double radius;
 
@@ -67,6 +67,11 @@ public class Tube implements Geometry{
     }
     @Override
     public List<Point> findIntersections(Ray ray) {
+        return null;
+    }
+
+    @Override
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         return null;
     }
 }

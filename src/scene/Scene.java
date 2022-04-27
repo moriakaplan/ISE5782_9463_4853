@@ -1,8 +1,11 @@
 package scene;
 
 import geometries.Geometries;
-import lighting.AmbientLight;
+import lighting.*;
 import primitives.Color;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * class scene- include the name, background, ambient light and geometries of the scene
@@ -12,6 +15,7 @@ public class Scene {
     public Color background;
     public AmbientLight ambientLight;
     public Geometries geometries;
+    public List<LightSource> lights= new LinkedList<>();
 
     /**
      * constructor- set the name of the scene and create empty list of geometries.
@@ -20,6 +24,7 @@ public class Scene {
     public Scene(String name) {
         this.name = name;
         geometries=new Geometries();
+        background=Color.BLACK;
     }
 
     /**
@@ -62,6 +67,15 @@ public class Scene {
         return this;
     }
 
+    /**
+     * setter for field lights in builder template.
+     * @param lights the light sources of the scene.
+     * @return the scene object.
+     */
+    public Scene setLights(List<LightSource> lights) {
+        this.lights = lights;
+        return this;
+    }
 
     /* builder- class scene
     private final String name;

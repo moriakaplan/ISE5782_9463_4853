@@ -2,6 +2,7 @@ package primitives;
 
 import java.util.List;
 import java.util.Objects;
+import geometries.Intersectable.GeoPoint;
 
 /**
  * this class represents a ray in three-dimensional space by point and vector from the point.
@@ -23,17 +24,27 @@ public class Ray {
 
     /**
      * find the point in the list that is the closest to the beginning of the ray.
+     * @param points list of points to compare.
+     * @return the closest point.
+     */
+    public Point findClosestPoint(List<Point> points) {
+        return points == null || points.isEmpty() ? null
+                : findClosestGeoPoint(points.stream().map(p -> new GeoPoint(null, p)).toList()).point;
+    }
+
+    /**
+     * find the GeoPoint in the list that is the closest to the beginning of the ray.
      * @param pointsList list of points to compare.
      * @return the closest point.
      */
-    public Point findClosestPoint(List<Point> pointsList) {
+    public GeoPoint findClosestGeoPoint(List<GeoPoint> pointsList) {
         if (pointsList.isEmpty() || pointsList == null) return null;
-        Point point = pointsList.get(0);
-        double minDisSquared = p0.distanceSquared(point);
+        GeoPoint point = pointsList.get(0);
+        double minDisSquared = p0.distanceSquared(point.point);
         double dis;
-        for (Point p :
+        for (GeoPoint p :
                 pointsList) {
-            dis = p0.distanceSquared(p);
+            dis = p0.distanceSquared(p.point);
             if (dis < minDisSquared) {
                 minDisSquared = dis;
                 point = p;
