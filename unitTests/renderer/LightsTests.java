@@ -15,6 +15,7 @@ import static java.awt.Color.*;
  */
 public class LightsTests {
 	private Scene scene1 = new Scene("Test scene");
+			//.setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.15)));
 	private Scene scene2 = new Scene("Test scene") //
 			.setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.15)));
 	private Camera camera1 = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
@@ -53,7 +54,7 @@ public class LightsTests {
 		camera1.setImageWriter(imageWriter) //
 				.setRayTracer(new RayTracerBasic(scene1)) //
 				.renderImage(); //
-		camera2.writeToImage(); //
+		camera1.writeToImage(); //
 	}
 
 	/**
@@ -68,7 +69,7 @@ public class LightsTests {
 		camera1.setImageWriter(imageWriter) //
 				.setRayTracer(new RayTracerBasic(scene1)) //
 				.renderImage(); //
-		camera2.writeToImage(); //
+		camera1.writeToImage(); //
 	}
 
 	/**
@@ -83,7 +84,7 @@ public class LightsTests {
 		camera1.setImageWriter(imageWriter) //
 				.setRayTracer(new RayTracerBasic(scene1)) //
 				.renderImage(); //
-		camera2.writeToImage(); //
+		camera1.writeToImage(); //
 	}
 
 	/**

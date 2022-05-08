@@ -23,8 +23,9 @@ public class Scene {
      */
     public Scene(String name) {
         this.name = name;
-        geometries=new Geometries();
-        background=Color.BLACK;
+        ambientLight = new AmbientLight();
+        geometries = new Geometries();
+        background = Color.BLACK;
     }
 
     /**
