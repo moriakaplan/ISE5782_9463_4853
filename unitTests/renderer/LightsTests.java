@@ -88,6 +88,28 @@ public class LightsTests {
 	}
 
 	/**
+	 * Produce a picture of a sphere lighted by directional, point and spot lights.
+	 */
+	@Test
+	public void sphereCComplicated() {
+		spCL = new Color(250, 250, 0);
+		Point spPL1 = new Point(-5, -50, 25); // position for point light
+		Point spPL2 = new Point(-50, -5, 25); // position for spot light
+		Color spCL1 = new Color(800, 50, 0); // color for point light
+		Color spCL2 = new Color(80, 500, 0); // color for spot light
+		scene1.geometries.add(sphere);
+		scene1.lights.add(new DirectionalLight(spCL, new Vector(-1, 1, 0.1)));
+		scene1.lights.add(new PointLight(spCL1, spPL1).setKl(0.01).setKq(0.0003));
+		scene1.lights.add(new SpotLight(spCL2, spPL2, new Vector(1, 1, -0.5)).setKl(0.0005).setKq(0.000001));
+
+		ImageWriter imageWriter = new ImageWriter("lightSphereComp", 500, 500);
+		camera1.setImageWriter(imageWriter) //
+				.setRayTracer(new RayTracerBasic(scene1)) //
+				.renderImage(); //
+		camera1.writeToImage(); //
+	}
+
+	/**
 	 * Produce a picture of a two triangles lighted by a directional light
 	 */
 	@Test
@@ -133,9 +155,29 @@ public class LightsTests {
 	}
 
 	/**
+	 * Produce a picture of a two triangles lighted by directional, point and spot lights.
+	 */
+	@Test
+	public void trianglesComplicated() {
+		Color trCL1 = new Color(800, 50, 250); // color for point light
+		Color trCL2 = new Color(10, 500, 250); // color for spot light
+		Point trPL2 = new Point(100, 100, -100); // position for point light
+		scene2.geometries.add(triangle1, triangle2);
+		scene2.lights.add(new DirectionalLight(trCL, trDL));
+		scene2.lights.add(new PointLight(trCL1, trPL2).setKl(0.0001).setKq(0.00002));
+		scene2.lights.add(new SpotLight(trCL2, trPL, trDL).setKl(0.0001).setKq(0.00001));
+
+		ImageWriter imageWriter = new ImageWriter("lightTrianglesComp", 500, 500);
+		camera2.setImageWriter(imageWriter) //
+				.setRayTracer(new RayTracerBasic(scene2)) //
+				.renderImage(); //
+		camera2.writeToImage(); //
+	}
+
+	/**
 	 * Produce a picture of a sphere lighted by a narrow spot light
 	 */
-	/*@Test
+	@Test
 	public void sphereSpotSharp() {
 		scene1.geometries.add(sphere);
 		scene1.lights
@@ -145,14 +187,13 @@ public class LightsTests {
 		camera1.setImageWriter(imageWriter) //
 				.setRayTracer(new RayTracerBasic(scene1)) //
 				.renderImage(); //
-		camera2.writeToImage(); //
+		camera1.writeToImage(); //
 	}
-	*/
 
 	/**
 	 * Produce a picture of a two triangles lighted by a narrow spot light
 	 */
-	/*@Test
+	@Test
 	public void trianglesSpotSharp() {
 		scene2.geometries.add(triangle1, triangle2);
 		scene2.lights.add(new SpotLight(trCL, trPL, trDL).setNarrowBeam(10).setKl(0.001).setKq(0.00004));
@@ -163,5 +204,4 @@ public class LightsTests {
 				.renderImage(); //
 		camera2.writeToImage(); //
 	}
-	*/
 }
