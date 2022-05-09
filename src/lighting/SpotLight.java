@@ -43,6 +43,6 @@ public class SpotLight extends PointLight{
         {
              return Color.BLACK;
         }
-        return super.getIntensity(p).scale(cos).scale(pow(cos, nB));
+        return super.getIntensity(p).scale(pow(cos, nB+1));
     }
 }
