@@ -2,8 +2,11 @@ package renderer;
 
 import primitives.*;
 
+import javax.swing.*;
 import java.util.MissingResourceException;
 
+import static java.lang.Math.*;
+import static primitives.Util.alignZero;
 import static primitives.Util.isZero;
 
 /**
@@ -33,7 +36,7 @@ public class Camera {
             throw new IllegalArgumentException("direction vectors of camera must be orthogonal");
         this.vTo = forVTo.normalize();
         this.vUp = forVUp.normalize();
-        this.vRight = forVTo.crossProduct(forVUp).normalize(); //need to be the right and not the left.
+        this.vRight = forVTo.crossProduct(forVUp).normalize();
     }
 
     /**
@@ -230,5 +233,54 @@ public class Camera {
      */
     public double getDistance() {
         return distance;
+    }
+
+    /**
+     * rotate the camera (change the direction vectors).
+     * the formula (for vUp and vTo):
+     * new v = v * cos + (k x v)sin + k(k*v)(1-cos)
+     * https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
+     *
+     * @param axis  the axis vector of rotation.
+     * @param angle the angle of the rotation.
+     */
+    public void rotate(Vector axis, double angle) {
+        double radAngle = angle * PI / 180;
+        Vector k = axis.normalize();
+        double cos = cos(radAngle), sin = sin(radAngle);
+        //calculate the new vector vTo according the formula.
+        this.vTo=calcRotatedVector(vTo, k, cos, sin);
+        //calculate the new vector vUp according the formula.
+        this.vUp=calcRotatedVector(vUp, k, cos, sin);
+        //calculate the new vector vRight (orthogonal to the others).
+        this.vRight = vTo.crossProduct(vUp).normalize();
+    }
+
+    /**
+     * help function fo rotation. calculate the new vector according to the parameters.
+     * the formula:
+     * new v = v * cos + (k x v)sin + k(k*v)(1-cos)
+     * assumes all the parameters are correct!
+     * @param v the vector to rotate.
+     * @param k the axis vector of the rotation (normalized)
+     * @param cos the cos of the rotation angle.
+     * @param sin the sin of the rotation angle.
+     * @return the new vector according to the formula.
+     */
+    private Vector calcRotatedVector(Vector v, Vector k, double cos, double sin){
+        if (sin == 0) {  //if sin is 0 the so v new = v * cos (because cos is 1 and 1-cos is also 0)
+            return v.scale(cos);
+        }
+        Vector vNew;
+        double dotPro = alignZero(k.dotProduct(v));
+        try{
+            vNew = k.crossProduct(v).scale(sin); // (k x v)sin
+        }
+        catch(IllegalArgumentException ex){ // cross product is 0 if the vectors parallel (the vector is rotation axis so the rotation not affect)
+            return v;
+        }
+        if (cos != 0) vNew = vNew.add(v.scale(cos)); // + v * cos
+        if (dotPro != 0) vNew = vNew.add(k.scale(dotPro * (1 - cos))); // + k(k*v)(1-cos)
+        return vNew;
     }
 }

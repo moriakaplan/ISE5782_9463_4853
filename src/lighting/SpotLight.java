@@ -39,10 +39,10 @@ public class SpotLight extends PointLight{
     @Override
     public Color getIntensity(Point p) {
         double cos = direction.dotProduct(getL(p));
-        if(cos<=0)
+        if(cos<=0) //take max(0, cos)
         {
              return Color.BLACK;
         }
-        return super.getIntensity(p).scale(pow(cos, nB+1));
+        return super.getIntensity(p).scale(pow(cos, nB+1)); //scale cos^nB for narrowing the beam. when the cos is little (big angle) and nB is big is more effective.
     }
 }

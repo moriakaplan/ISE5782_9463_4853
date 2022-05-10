@@ -7,6 +7,10 @@ import geometries.*;
 import primitives.*;
 import renderer.*;
 import scene.Scene;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import static java.awt.Color.*;
 
 /**
@@ -76,6 +80,39 @@ public class RenderTests {
         camera.renderImage();
         camera.printGrid(100, new Color(WHITE));
         camera.writeToImage();
+
+        //rotations:
+        //rotation according to vUp
+        camera.setImageWriter(new ImageWriter("color render test (rotate according up)", 1000, 1000));
+        camera.rotate(camera.getvUp(), 20);
+        camera.renderImage();
+        camera.printGrid(100, new Color(WHITE));
+        camera.writeToImage();
+        camera.rotate(camera.getvUp(), -20);
+
+        //rotation according to vTo
+        camera.setImageWriter(new ImageWriter("color render test (rotate according to)", 1000, 1000));
+        camera.rotate(camera.getvTo(), 20);
+        camera.renderImage();
+        camera.printGrid(100, new Color(WHITE));
+        camera.writeToImage();
+        camera.rotate(camera.getvTo(), -20);
+
+        //rotation according to vRight
+        camera.setImageWriter(new ImageWriter("color render test (rotate according right)", 1000, 1000));
+        camera.rotate(camera.getvRight(), 20);
+        camera.renderImage();
+        camera.printGrid(100, new Color(WHITE));
+        camera.writeToImage();
+        camera.rotate(camera.getvRight(), -20);
+
+        // another rotation
+        camera.setImageWriter(new ImageWriter("color render test (another rotation)", 1000, 1000));
+        camera.rotate(new Vector(1,1,1), 20);
+        camera.renderImage();
+        camera.printGrid(100, new Color(WHITE));
+        camera.writeToImage();
+        camera.rotate(new Vector(1,1,1), -20);
     }
 
     /**

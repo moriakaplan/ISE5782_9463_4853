@@ -2,6 +2,7 @@ package renderer;
 
 import primitives.Color;
 import java.awt.image.BufferedImage;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -89,5 +90,4 @@ public class ImageWriter {
 	public void writePixel(int xIndex, int yIndex, Color color) {
 		image.setRGB(xIndex, yIndex, color.getColor().getRGB());
 	}
-
 }
