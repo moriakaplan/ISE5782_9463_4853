@@ -236,6 +236,16 @@ public class Camera {
     }
 
     /**
+     * move the camera according to three parameters of distance.
+     * @param distanceTo distance to move in the direction to.
+     * @param distanceUp distance to move in the direction up.
+     * @param distanceRight distance to move in the direction right.
+     */
+    public void move(double distanceTo, double distanceUp, double distanceRight){
+        location.add(vTo.scale(distanceTo).add(vUp.scale(distanceUp)).add(vRight.scale(distanceRight)));
+    }
+
+    /**
      * rotate the camera (change the direction vectors).
      * the formula (for vUp and vTo):
      * new v = v * cos + (k x v)sin + k(k*v)(1-cos)

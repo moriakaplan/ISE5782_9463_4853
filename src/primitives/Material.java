@@ -3,6 +3,14 @@ package primitives;
 public class Material {
     public Double3 kD = new Double3(0);
     public Double3 kS = new Double3(0);
+    /**
+     *
+     */
+    public Double3 kT = new Double3(0);
+    /**
+     * refraction
+     */
+    public Double3 kR = new Double3(0);
     public int shininess = 0;
 
     /*public Material(double kd, double ks, int shininess) {
