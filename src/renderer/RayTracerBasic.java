@@ -15,6 +15,9 @@ import static primitives.Util.alignZero;
  */
 public class RayTracerBasic extends RayTracerBase {
     private static final double DELTA = 0.1;
+    private static final int MAX_CALC_COLOR_LEVEL = 10;
+    private static final double MIN_CALC_COLOR_K = 0.001;
+
 
     /**
      * constructor- Initializes the reference scene.
@@ -49,6 +52,38 @@ public class RayTracerBasic extends RayTracerBase {
         }
         return true;
     }
+
+    /**
+     * calculate the reflected ray according to the formula
+     * r = v-2*(vn)*n
+     * @param gP the point in the space
+     * @param n the normal vector
+     * @param v the vector from the camera to the point
+     * @return the reflected ray
+     */
+    private Ray reflectedRay(GeoPoint gP, Vector n, Vector v)
+    {
+        double nv = n.dotProduct(v);
+        Vector epsVector = n.scale(nv < 0 ? DELTA : -DELTA);
+        return new Ray(gP.point.add(epsVector),v.subtract(n.scale(nv*2)));
+    }
+
+    private Ray refractedRay(GeoPoint gP, Vector n, Vector v)
+    {
+        double nv = n.dotProduct(v);
+        Vector epsVector = n.scale(nv < 0 ? -DELTA : DELTA);
+        return new Ray(gP.point.add(epsVector),v);
+    }
+
+    /*private double transparency(GeoPoint gP, LightSource light, Vector l, Vector n, double nv) {
+            if (intersections == null) return 1;
+        double ktr = 1;
+
+        loop over intersections and for each intersection which is closer to the
+        point than the light source multiply ktr by 𝒌𝑻 of its geometry
+        return ktr;
+    }*/
+
 
     /**
      * find the color of specific point in the scene.
