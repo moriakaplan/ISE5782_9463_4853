@@ -10,6 +10,7 @@ import geometries.Intersectable.GeoPoint;
 public class Ray {
     private final Point p0;
     private final Vector dir;
+    private static final double DELTA = 0.1;
 
     /**
      * Constructor- initialize the data according a point and normalize vector.
@@ -22,13 +23,18 @@ public class Ray {
         this.dir = dir.normalize();
     }
 
+    public Ray(Point p0, Vector dir, Vector n) {
+        this.p0 = p0.add(n.scale(DELTA));
+        this.dir = dir;
+    }
+
     /**
      * find the point in the list that is the closest to the beginning of the ray.
      * @param points list of points to compare.
      * @return the closest point.
      */
     public Point findClosestPoint(List<Point> points) {
-        return points == null || points.isEmpty() ? null
+        return (points == null || points.isEmpty()) ? null
                 : findClosestGeoPoint(points.stream().map(p -> new GeoPoint(null, p)).toList()).point;
     }
 
@@ -38,7 +44,7 @@ public class Ray {
      * @return the closest point.
      */
     public GeoPoint findClosestGeoPoint(List<GeoPoint> pointsList) {
-        if (pointsList.isEmpty() || pointsList == null) return null;
+        if (pointsList == null || pointsList.isEmpty()) return null;
         GeoPoint point = pointsList.get(0);
         double minDisSquared = p0.distanceSquared(point.point);
         double dis;

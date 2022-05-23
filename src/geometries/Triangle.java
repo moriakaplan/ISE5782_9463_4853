@@ -57,8 +57,8 @@ public class Triangle extends Polygon {
         else return null;
     }
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        List<GeoPoint> l = plane.findGeoIntersectionsHelper(ray);
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
+        List<GeoPoint> l = plane.findGeoIntersectionsHelper(ray, maxDistance);
         if (l == null) return null;
         Point p0 = ray.getP0();
         Vector v = ray.getDir();

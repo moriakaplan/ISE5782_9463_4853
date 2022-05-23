@@ -4,6 +4,7 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static java.lang.Math.sqrt;
@@ -81,7 +82,7 @@ public class Sphere extends Geometry {
     }
 
     @Override
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
         Point p0 = ray.getP0();
         if (center.equals(p0))
             return List.of(new GeoPoint(this, ray.getPoint(radius)));
@@ -91,13 +92,18 @@ public class Sphere extends Geometry {
         if (alignZero(d - radius) >= 0) return null;
         double tH = sqrt(radius * radius - d * d);
         double t1 = alignZero(tM + tH);
-        if (t1 <= 0)
-            return null;
         double t2 = alignZero(tM - tH);
-        if (t2 <= 0)
-            return List.of(new GeoPoint(this, ray.getPoint(t1)));
-        return List.of(
-                new GeoPoint(this, ray.getPoint(t1)),
-                new GeoPoint(this, ray.getPoint(t2)));
+        if (t1 > 0 && alignZero(maxDistance - t1) > 0) { // 0 < t1 < max - t1 is okay.
+            if (t2 > 0) { // t2 > 0 - t2 is okay (t2 < t1 < max).
+                return List.of(
+                        new GeoPoint(this, ray.getPoint(t1)),
+                        new GeoPoint(this, ray.getPoint(t2)));
+            }
+            return List.of(new GeoPoint(this, ray.getPoint(t1))); // else- just t1 is okay
+        }
+        if (t2 > 0 && alignZero(maxDistance - t2) > 0) { //t1 is not okay but 0 < t2 < max so t2 is okay.
+            return List.of(new GeoPoint(this, ray.getPoint(t2)));
+        }
+        return null; //nothing is okay.
     }
 }

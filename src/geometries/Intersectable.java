@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- *
+ * abstract class for object that we can find intersections on them.
  */
 public abstract class Intersectable {
 
@@ -58,9 +58,31 @@ public abstract class Intersectable {
                 : geoList.stream().map(gp -> gp.point).toList();
     }
 
-    public List<GeoPoint> findGeoIntersections(Ray ray){
-        return findGeoIntersectionsHelper(ray);
+    /**
+     * find all the intersections between intersectable object and a ray.
+     * @param ray a ray that night intersect this object.
+     * @return the list of intersections in GeoPoint points.
+     */
+    public final List<GeoPoint> findGeoIntersections(Ray ray) {
+        return findGeoIntersections(ray, Double.POSITIVE_INFINITY);
     }
 
-    protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
+    /**
+     * find intersections between intersectable object and a ray- til a maximum specific distance from the beginning of the ray..
+     * @param ray a ray that night intersect this object.
+     * @param maxDistance maximum distance for the points that we return.
+     * @return the list of intersections in GeoPoint points.
+     */
+    public List<GeoPoint> findGeoIntersections(Ray ray, double maxDistance){
+        return findGeoIntersectionsHelper(ray, maxDistance);
+    }
+
+    /**
+     * helper abstract function for find intersection between intersectable object and a ray (with distance that smaller than the maximum).
+     * do the real job.
+     * @param ray a ray that night intersect this object.
+     * @param maxDistance maximum distance for the points that we return.
+     * @return the list of intersection in GeoPoint points.
+     */
+    protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance);
 }
