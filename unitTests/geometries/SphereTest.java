@@ -18,7 +18,7 @@ class SphereTest {
     void testGetNormal() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test function getNormal of Sphere.
-        Sphere s=new Sphere(new Point(1, 2,3), 5);
+        Sphere s = new Sphere(new Point(1, 2, 3), 5);
         assertEquals(
                 s.getNormal(new Point(1, 7, 3)),
                 new Vector(0, 1, 0),
@@ -30,7 +30,7 @@ class SphereTest {
      */
     @Test
     public void testFindIntersections() {
-        Sphere sphere = new Sphere( new Point (1, 0, 0), 1d);
+        Sphere sphere = new Sphere(new Point(1, 0, 0), 1d);
 
         // ============ Equivalence Partitions Tests ==============
 
@@ -92,7 +92,7 @@ class SphereTest {
         result = sphere.findIntersections(new Ray(new Point(1, -1, 0), new Vector(0, 1, 0)));
         assertEquals(1, result.size(), "ERROR: #TC14- Wrong number of points (need to be 1");
         assertEquals(
-                List.of(new Point(1,1, 0)),
+                List.of(new Point(1, 1, 0)),
                 result,
                 "#TC14- crosses sphere");
 
@@ -141,4 +141,19 @@ class SphereTest {
                 "ERROR: #TC22- Ray's line out of sphere");
     }
 
+    /**
+     * Test method for {@link geometries.Sphere#findGeoIntersections(Ray, double)}.
+     */
+    @Test
+    public void testFindGeoIntersectionsMaxDistance() {
+        // TC01: MaxDistance is between the 2 points- 1 point.
+        Sphere sphere = new Sphere(new Point(1, 0, 0), 1d);
+        Point p1 = new Point(0.0651530771650466, 0.355051025721682, 0);
+        Point p2 = new Point(1.53484692283495, 0.844948974278318, 0);
+        List<Intersectable.GeoPoint> result = sphere.findGeoIntersections(new Ray(new Point(-1, 0, 0),
+                new Vector(3, 1, 0)), 2);
+        assertEquals(1, result.size(), "ERROR: #TC02- Wrong number of points");
+        assertEquals(p1, result.get(0).point, "ERROR: #TC02- Ray crosses sphere");
+
+    }
 }

@@ -114,6 +114,40 @@ public class ReflectionRefractionTests {
 				.setVPSize(200, 200).setVPDistance(1000);
 
 		scene.setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.15)));
+		scene.geometries.add(
+				new Plane(new Point(0, -35, 0), new Vector(0,1,0)).setEmission(new Color(GRAY))
+						.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60).setKr(0.7)),
+				new Sphere(new Point(28, 10, -10), 30d).setEmission(new Color(BLUE)) //
+						.setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(0.6)),
+				new Triangle(new Point(100, -35, -250), new Point(-50, -35, -80), new Point(-30, 40, -120)).setEmission(new Color(GREEN))
+						.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60).setKt(0.7))
+		);
+
+		scene.lights.add(new SpotLight(new Color(700, 400, 400), new Point(60, 50, -50), new Vector(-20, -5, 5)) //
+				.setKl(4E-5).setKq(2E-7));
+
+		ImageWriter imageWriter = new ImageWriter("refractionReflectionShadowSomeShapes1", 600, 600);
+		camera.setImageWriter(imageWriter) //
+				.setRayTracer(new RayTracerBasic(scene)) //
+				.renderImage(); //
+		camera.writeToImage();
+
+		camera.move(0, 0, 500);
+		camera.rotate(camera.getvUp(), 25);
+
+		imageWriter = new ImageWriter("refractionReflectionShadowSomeShapes2", 600, 600);
+		camera.setImageWriter(imageWriter) //
+				.setRayTracer(new RayTracerBasic(scene)) //
+				.renderImage(); //
+		camera.writeToImage();
+	}
+
+	@Test
+	public void ImageWithSomeShapes2() {
+		Camera camera = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
+				.setVPSize(200, 200).setVPDistance(1000);
+
+		scene.setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.15)));
 
 		scene.geometries.add( //
 				new Triangle(new Point(-150, -150, -115), new Point(150, -150, -135), new Point(75, 75, -150)) //

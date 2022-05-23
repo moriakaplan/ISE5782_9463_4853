@@ -66,4 +66,23 @@ class TriangleTest {
 
 
     }
+    /**
+     * test method for {@link geometries.Triangle#findGeoIntersections(Ray, double)}
+     */
+    @Test
+    void testFindGeoIntersectionsMaxDistance() {
+        Plane pl = new Plane(new Point(1,0,0),new Vector(0,0,1));
+        Triangle t=new Triangle(new Point(1,0,0), new Point(0,2,0), new Point(0,0,3));
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: the intersection closer than the maxDistance- 1 point.
+        List<Intersectable.GeoPoint> result = t.findGeoIntersections(new Ray(new Point(0.1,0.2,0.2), new Vector(1,2,2)),1.8);
+        assertEquals(result.get(0).point,
+                new Point(0.375,0.75,0.75),
+                "ERROR: maxDistance not work correctly");
+        // TC02: the intersection too far- null.
+        result = t.findGeoIntersections(new Ray(new Point(0.1,0.2,0.2), new Vector(1,2,2)),0.6);
+        assertNull(result,
+                "ERROR: maxDistance not work correctly2");
+
+    }
 }

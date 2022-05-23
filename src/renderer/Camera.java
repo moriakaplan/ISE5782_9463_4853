@@ -242,7 +242,9 @@ public class Camera {
      * @param distanceRight distance to move in the direction right.
      */
     public void move(double distanceTo, double distanceUp, double distanceRight){
-        location.add(vTo.scale(distanceTo).add(vUp.scale(distanceUp)).add(vRight.scale(distanceRight)));
+        if(alignZero(distanceTo)!=0) location=location.add(vTo.scale(distanceTo));
+        if(alignZero(distanceUp)!=0) location=location.add(vUp.scale(distanceUp));
+        if(alignZero(distanceRight)!=0) location=location.add(vRight.scale(distanceRight));
     }
 
     /**
