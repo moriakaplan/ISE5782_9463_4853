@@ -107,6 +107,35 @@ public class ReflectionRefractionTests {
 				.renderImage(); //
 		camera.writeToImage();
 	}
+	/**
+	 * Produce a picture of two triangles lighted by a spotlight with a partially
+	 * transparent Sphere producing partial shadow with anti aliasing
+	 */
+	@Test
+	public void antiAliasingTest() {
+		Camera camera = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
+				.setVPSize(200, 200).setVPDistance(1000);
+
+		scene.setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.15)));
+
+		scene.geometries.add( //
+				new Triangle(new Point(-150, -150, -115), new Point(150, -150, -135), new Point(75, 75, -150)) //
+						.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60)), //
+				new Triangle(new Point(-150, -150, -115), new Point(-70, 70, -140), new Point(75, 75, -150)) //
+						.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60)), //
+				new Sphere(new Point(60, 50, -50), 30d).setEmission(new Color(BLUE)) //
+						.setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(0.6)));
+
+		scene.lights.add(new SpotLight(new Color(700, 400, 400), new Point(60, 50, 0), new Vector(0, 0, -1)) //
+				.setKl(4E-5).setKq(2E-7));
+
+		ImageWriter imageWriter = new ImageWriter("refractionShadowAntialiasing", 600, 600);
+		camera.setImageWriter(imageWriter) //
+				.setMultiRaysNum(27)
+				.setRayTracer(new RayTracerBasic(scene)) //
+				.renderImage(); //
+		camera.writeToImage();
+	}
 
 	@Test
 	public void ImageWithSomeShapes() {

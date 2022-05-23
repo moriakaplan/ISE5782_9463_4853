@@ -3,6 +3,8 @@ package renderer;
 import primitives.*;
 
 import javax.swing.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.MissingResourceException;
 
 import static java.lang.Math.*;
@@ -22,6 +24,8 @@ public class Camera {
     private double distance;
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
+    //private boolean superSampling = false;
+    private int multiRaysNum = 1;
 
     /**
      * constructor for the camera's data.
@@ -40,6 +44,58 @@ public class Camera {
     }
 
     /**
+     * setter for multiRaysNum field
+     * @param multiRaysNum multiRaysNum^2 is the number of rays through a pixel
+     * @return the camera object
+     */
+    public Camera setMultiRaysNum(int multiRaysNum) {
+        if (multiRaysNum < 1) {
+            throw new IllegalArgumentException("number of rays through pixels must be positive");
+        }
+        this.multiRaysNum = multiRaysNum;
+        return this;
+    }
+
+    /**
+     * find the rays that go through the specific pixel in the view plane.
+     *
+     * @param nX the amount of columns of pixels.
+     * @param nY the amount of rows of pixels.
+     * @param j  the specific column of the wanted pixel.
+     * @param i  the specific row of the wanted pixel.
+     * @return the ray that go through the pixel.
+     */
+    public List<Ray> constructRaySuperSampling(int nX, int nY, int j, int i) {
+        List<Ray> result = new LinkedList<Ray>();
+        //view plane center
+        Point Pc = location.add(vTo.scale(distance));
+        //ratio- pixel height and width
+        double pixelHeight = (double) height / nY;
+        double pixelWidth = (double) width / nX;
+        double cellHeight = (double) pixelHeight / multiRaysNum;
+        double cellWidth = (double) pixelWidth / multiRaysNum;
+
+        //pixel[i,j] center
+        Point Pij = Pc;
+        Point point;
+        double Yi = -(0.5 + i - (nY - 1) / 2d) * pixelHeight + 0.5 * cellHeight; //how to move from the center of the view plane.
+        double Xj = (-0.5 + j - (nX - 1) / 2d) * pixelWidth + 0.5 * cellWidth; /***/
+        if (Xj != 0)
+            Pij = Pij.add(vRight.scale(Xj));
+        if (Yi != 0)
+            Pij = Pij.add(vUp.scale(Yi));
+        for (int k = 0; k < multiRaysNum; k++) {
+            for (int l = 0; l < multiRaysNum; l++) {
+                point = Pij;
+                if (k != 0) point = point.add(vRight.scale(cellWidth * k));
+                if (l != 0) point = point.add(vUp.scale(cellHeight * l));
+                result.add(new Ray(location, point.subtract(location)));
+            }
+        }
+        return result;
+    }
+
+    /**
      * find the ray that go through the specific pixel in the view plane.
      *
      * @param nX the amount of columns of pixels.
@@ -51,15 +107,14 @@ public class Camera {
     public Ray constructRay(int nX, int nY, int j, int i) {
         //view plane center
         Point Pc = location.add(vTo.scale(distance));
-
         //ratio- pixel height and width
-        double Ry = (double) height / nY;
-        double Rx = (double) width / nX;
+        double pixelHeight = (double) height / nY;
+        double pixelWidth = (double) width / nX;
 
         //pixel[i,j] center
         Point Pij = Pc;
-        double Yi = -(i - (nY - 1) / 2d) * Ry;
-        double Xj = (j - (nX - 1) / 2d) * Rx;
+        double Yi = -(i - (nY - 1) / 2d) * pixelHeight;
+        double Xj = (j - (nX - 1) / 2d) * pixelWidth;
         if (Xj != 0)
             Pij = Pij.add(vRight.scale(Xj));
         if (Yi != 0)
@@ -67,6 +122,7 @@ public class Camera {
         Vector Vij = Pij.subtract(location);
         return new Ray(location, Vij);
     }
+
 
     /**
      * find the color that specific ray encounter.
@@ -88,10 +144,22 @@ public class Camera {
             throw new MissingResourceException("can't render image because one of the fields of the camera is null", "", "");
         }
         int Nx = imageWriter.getNx(), Ny = imageWriter.getNy();
+        Color color;
         for (int i = 0; i < Ny; i++) {
             for (int j = 0; j < Nx; j++) {
-                Ray ray = constructRay(Nx, Ny, j, i);
-                imageWriter.writePixel(j, i, castRay(ray));
+                if (multiRaysNum == 1) {
+                    Ray ray = constructRay(Nx, Ny, j, i);
+                    color = castRay(ray);
+                } else {
+                    List<Ray> rays = constructRaySuperSampling(Nx, Ny, j, i);
+                    color = Color.BLACK;
+                    for (Ray ray :
+                            rays) {
+                        color = color.add(castRay(ray));
+                    }
+                    color = color.reduce(rays.size());
+                }
+                imageWriter.writePixel(j, i, color);
             }
         }
     }
@@ -118,7 +186,7 @@ public class Camera {
      */
     public void writeToImage() {
         if (imageWriter == null)
-            throw new MissingResourceException("can't writr the image because field imageWriter of the camera is null", "ImageWriter", "");
+            throw new MissingResourceException("can't write the image because field imageWriter of the camera is null", "ImageWriter", "");
         imageWriter.writeToImage();
     }
 
@@ -237,14 +305,15 @@ public class Camera {
 
     /**
      * move the camera according to three parameters of distance.
-     * @param distanceTo distance to move in the direction to.
-     * @param distanceUp distance to move in the direction up.
+     *
+     * @param distanceTo    distance to move in the direction to.
+     * @param distanceUp    distance to move in the direction up.
      * @param distanceRight distance to move in the direction right.
      */
-    public void move(double distanceTo, double distanceUp, double distanceRight){
-        if(alignZero(distanceTo)!=0) location=location.add(vTo.scale(distanceTo));
-        if(alignZero(distanceUp)!=0) location=location.add(vUp.scale(distanceUp));
-        if(alignZero(distanceRight)!=0) location=location.add(vRight.scale(distanceRight));
+    public void move(double distanceTo, double distanceUp, double distanceRight) {
+        if (alignZero(distanceTo) != 0) location = location.add(vTo.scale(distanceTo));
+        if (alignZero(distanceUp) != 0) location = location.add(vUp.scale(distanceUp));
+        if (alignZero(distanceRight) != 0) location = location.add(vRight.scale(distanceRight));
     }
 
     /**
@@ -261,9 +330,9 @@ public class Camera {
         Vector k = axis.normalize();
         double cos = cos(radAngle), sin = sin(radAngle);
         //calculate the new vector vTo according the formula.
-        this.vTo=calcRotatedVector(vTo, k, cos, sin);
+        this.vTo = calcRotatedVector(vTo, k, cos, sin);
         //calculate the new vector vUp according the formula.
-        this.vUp=calcRotatedVector(vUp, k, cos, sin);
+        this.vUp = calcRotatedVector(vUp, k, cos, sin);
         //calculate the new vector vRight (orthogonal to the others).
         this.vRight = vTo.crossProduct(vUp).normalize();
     }
@@ -273,22 +342,22 @@ public class Camera {
      * the formula:
      * new v = v * cos + (k x v)sin + k(k*v)(1-cos)
      * assumes all the parameters are correct!
-     * @param v the vector to rotate.
-     * @param k the axis vector of the rotation (normalized)
+     *
+     * @param v   the vector to rotate.
+     * @param k   the axis vector of the rotation (normalized)
      * @param cos the cos of the rotation angle.
      * @param sin the sin of the rotation angle.
      * @return the new vector according to the formula.
      */
-    private Vector calcRotatedVector(Vector v, Vector k, double cos, double sin){
+    private Vector calcRotatedVector(Vector v, Vector k, double cos, double sin) {
         if (sin == 0) {  //if sin is 0 the so v new = v * cos (because cos is 1 and 1-cos is also 0)
             return v.scale(cos);
         }
         Vector vNew;
         double dotPro = alignZero(k.dotProduct(v));
-        try{
+        try {
             vNew = k.crossProduct(v).scale(sin); // (k x v)sin
-        }
-        catch(IllegalArgumentException ex){ // cross product is 0 if the vectors parallel (the vector is rotation axis so the rotation not affect)
+        } catch (IllegalArgumentException ex) { // cross product is 0 if the vectors parallel (the vector is rotation axis so the rotation not affect)
             return v;
         }
         if (cos != 0) vNew = vNew.add(v.scale(cos)); // + v * cos
