@@ -1,6 +1,7 @@
 package renderer;
 
 import lighting.LightSource;
+import lighting.PointLight;
 import primitives.*;
 import scene.Scene;
 import geometries.Intersectable.GeoPoint;
@@ -30,6 +31,7 @@ public class RayTracerBasic extends RayTracerBase {
 
     /**
      * find the closest intersection between the geometries of the scene and a ray.
+     *
      * @param ray ray in the space that might intersect objects.
      * @return the closest intersection.
      */
@@ -39,7 +41,8 @@ public class RayTracerBasic extends RayTracerBase {
 
     /**
      * find the closest intersection until maximum distance.
-     * @param ray ray in the space.
+     *
+     * @param ray         ray in the space.
      * @param maxDistance maximum distance between the beginning of the ray and the point.
      * @return the closest point
      */
@@ -75,12 +78,42 @@ public class RayTracerBasic extends RayTracerBase {
         List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay, light.getDistance(gP.point));
 
         Double3 ktr = new Double3(1);
-        if (intersections == null) return ktr; //return ktr if there are no intersections in the way.
-        for (GeoPoint p :
-                intersections) {
-            ktr = ktr.product(p.geometry.getMaterial().kT);
+        if (intersections != null) { //return ktr if there are no intersections in the way.
+            for (GeoPoint p :
+                    intersections) {
+                ktr = ktr.product(p.geometry.getMaterial().kT);
+            }
         }
         return ktr;
+    }
+
+    /**
+     * check if the point is not shaded.
+     *
+     * @param gP point on geometry.
+     * @param l  the vector from the light source to the point.
+     * @param n  the normal vector from the point.
+     * @param nv the dot product of n and v (v- the vector from the camera to the point).
+     * @return true if its unshaded and false if its shaded.
+     */
+    private Double3 transparencySoftShadow(GeoPoint gP, LightSource light, Vector l, Vector n, double nv) {
+        //Vector lightDirection = l.scale(-1); // from point to light source
+        Vector directedNormal = nv < 0 ? n : n.scale(-1);
+        List<Ray> shadowRays= light.shadowRays(gP.point, directedNormal, scene.softShadowTargetSize, scene.softShadowNumRays);
+        //List<Ray> shadowRays = List.of(new Ray(gP.point, lightDirection, directedNormal));
+        Double3 averageKtr=new Double3(0);
+        for (Ray ray: shadowRays) {
+            List<GeoPoint> intersections = scene.geometries.findGeoIntersections(ray, light.getDistance(gP.point));
+            Double3 ktr = new Double3(1);
+            if (intersections != null) { //return ktr if there are no intersections in the way.
+                for (GeoPoint p : intersections) {
+                    ktr = ktr.product(p.geometry.getMaterial().kT);
+                }
+            }
+            averageKtr = averageKtr.add(ktr);
+        }
+
+        return averageKtr.reduce(shadowRays.size());
     }
 
     /**
@@ -100,9 +133,10 @@ public class RayTracerBasic extends RayTracerBase {
 
     /**
      * find the refracted ray from point on a geometry.
+     *
      * @param point a point in the scene.
-     * @param n normal vector of the point from the geometry.
-     * @param v vector to the point (to refract).
+     * @param n     normal vector of the point from the geometry.
+     * @param v     vector to the point (to refract).
      * @return the refracted ray.
      */
     private Ray constructRefractedRay(Point point, Vector n, Vector v) {
@@ -126,8 +160,8 @@ public class RayTracerBasic extends RayTracerBase {
     /**
      * find the color of specific point in the scene.
      *
-     * @param gp point in space.
-     * @param ray ray to the point
+     * @param gp    point in space.
+     * @param ray   ray to the point
      * @param level level of the recursion (for stop the recursion).
      * @param k
      * @return the color of this point in the scene.
@@ -140,8 +174,9 @@ public class RayTracerBasic extends RayTracerBase {
 
     /**
      * calculate the global effects of the point- reflections and refractions.
-     * @param gp GeoPoint point
-     * @param ray ray to the point.
+     *
+     * @param gp    GeoPoint point
+     * @param ray   ray to the point.
      * @param level level of the recursion (for stop the recursion).
      * @param k
      * @return
@@ -182,7 +217,11 @@ public class RayTracerBasic extends RayTracerBase {
             Vector l = light.getL(gP.point);
             double nl = alignZero(n.dotProduct(l));
             if (nl * nv > 0) { // sign(nl) == sing(nv)
-                Double3 ktr = transparency(gP, light, l, n, nv);
+                Double3 ktr;
+                if (scene.softShadowNumRays>1 && (light instanceof PointLight))
+                    ktr = transparencySoftShadow(gP, light, l, n, nv);
+                else
+                    ktr = transparency(gP, light, l, n, nv);
                 if (!ktr.product(k).lowerThan(MIN_CALC_COLOR_K)) {
                     Color iL = light.getIntensity(gP.point).scale(ktr);
                     color = color.add(iL.scale(calcDiffusive(material, nl))

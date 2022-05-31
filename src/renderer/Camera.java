@@ -2,7 +2,6 @@ package renderer;
 
 import primitives.*;
 
-import javax.swing.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -25,7 +24,7 @@ public class Camera {
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
     //private boolean superSampling = false;
-    private int multiRaysNum = 1;
+    private int antiAliasingNumRays = 1;
 
     /**
      * constructor for the camera's data.
@@ -44,15 +43,25 @@ public class Camera {
     }
 
     /**
-     * setter for multiRaysNum field
+     * start the anti aliasing improvement.
+     * set the multiRaysNum field
      * @param multiRaysNum multiRaysNum^2 is the number of rays through a pixel
      * @return the camera object
      */
-    public Camera setMultiRaysNum(int multiRaysNum) {
+    public Camera antiAliasingOn(int multiRaysNum) {
         if (multiRaysNum < 1) {
             throw new IllegalArgumentException("number of rays through pixels must be positive");
         }
-        this.multiRaysNum = multiRaysNum;
+        this.antiAliasingNumRays = multiRaysNum;
+        return this;
+    }
+
+    /**
+     * stop the anti aliasing improvement.
+     * @return
+     */
+    public Camera AntiAliasingOff() {
+        this.antiAliasingNumRays = 1;
         return this;
     }
 
@@ -72,8 +81,8 @@ public class Camera {
         //ratio- pixel height and width
         double pixelHeight = (double) height / nY;
         double pixelWidth = (double) width / nX;
-        double cellHeight = (double) pixelHeight / multiRaysNum;
-        double cellWidth = (double) pixelWidth / multiRaysNum;
+        double cellHeight = (double) pixelHeight / antiAliasingNumRays;
+        double cellWidth = (double) pixelWidth / antiAliasingNumRays;
 
         //pixel[i,j] center
         Point Pij = Pc;
@@ -84,8 +93,8 @@ public class Camera {
             Pij = Pij.add(vRight.scale(Xj));
         if (Yi != 0)
             Pij = Pij.add(vUp.scale(Yi));
-        for (int k = 0; k < multiRaysNum; k++) {
-            for (int l = 0; l < multiRaysNum; l++) {
+        for (int k = 0; k < antiAliasingNumRays; k++) {
+            for (int l = 0; l < antiAliasingNumRays; l++) {
                 point = Pij;
                 if (k != 0) point = point.add(vRight.scale(cellWidth * k));
                 if (l != 0) point = point.add(vUp.scale(cellHeight * l));
@@ -147,7 +156,7 @@ public class Camera {
         Color color;
         for (int i = 0; i < Ny; i++) {
             for (int j = 0; j < Nx; j++) {
-                if (multiRaysNum == 1) {
+                if (antiAliasingNumRays == 1) {
                     Ray ray = constructRay(Nx, Ny, j, i);
                     color = castRay(ray);
                 } else {
