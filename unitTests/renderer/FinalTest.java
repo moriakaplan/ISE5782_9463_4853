@@ -40,43 +40,48 @@ public class FinalTest {
     class BallsPool extends Geometries{
         BallsPool(Point center, Material m){
             super();
-            Point b1 = center.add(new Vector(-40, -40, 0))
+            Point b1 = center.add(new Vector(-40, -40, 0)) //b- base
                     ,b2 = center.add(new Vector(40, -40, 0))
                     ,b3 = center.add(new Vector(40, 40, 0))
-                    ,b4 = center.add(new Vector(-40, 40, 0));
-            Point u1 = center.add(new Vector(-40, -40, 20))
+                    ,b4 = center.add(new Vector(-40, 40, 0))
+
+                    ,u1 = center.add(new Vector(-40, -40, 20)) //u- up
                     ,u2 = center.add(new Vector(40, -40, 20))
                     ,u3 = center.add(new Vector(40, 40, 20))
-                    ,u4 = center.add(new Vector(-40, 40, 20));
-            Point bi1 = center.add(new Vector(-30, -30, 2))
+                    ,u4 = center.add(new Vector(-40, 40, 20))
+
+                    ,bi1 = center.add(new Vector(-30, -30, 2)) //bi- base inside
                     ,bi2 = center.add(new Vector(30, -30, 2))
                     ,bi3 = center.add(new Vector(30, 30, 2))
-                    ,bi4 = center.add(new Vector(-30, 30, 2));
-            Point ui1 = center.add(new Vector(-30, -30, 20))
+                    ,bi4 = center.add(new Vector(-30, 30, 2))
+
+                    ,ui1 = center.add(new Vector(-30, -30, 20)) //ui- up inside
                     ,ui2 = center.add(new Vector(30, -30, 20))
                     ,ui3 = center.add(new Vector(30, 30, 20))
                     ,ui4 = center.add(new Vector(-30, 30, 20));
-            Color red = new Color(200, 10, 10);
+
+            Color red1 = new Color(200, 10, 10);
+            Color red2 = new Color(180, 15, 15);
             Color blue = new Color(10,10,200);
             Color yellow = new Color(180,180,0);
-            super.add(new Rec(b1, b2, b3, b4, blue, m) ,
-                      new Rec(b1, b2, u2, u1, blue, m) ,
+
+            super.add(new Rec(b1, b2, b3, b4, blue, m) , //base
+                      new Rec(b1, b2, u2, u1, blue, m) , //sides
                       new Rec(b3, b2, u2, u3, blue, m) ,
                       new Rec(b3, b4, u4, u3, blue, m) ,
                       new Rec(b1, b4, u4, u1, blue, m),
-                      new Rec(bi1, bi2, bi3, bi4, new Color(ORANGE), m) ,
-                      new Rec(u1, u2, ui2, ui1, yellow, m) ,
+                      new Rec(bi1, bi2, bi3, bi4, red2, m) , //internal base
+                      new Rec(u1, u2, ui2, ui1, yellow, m) , //up
                       new Rec(u3, u2, ui2, ui3, yellow, m) ,
                       new Rec(u3, u4, ui4, ui3, yellow, m) ,
                       new Rec(u1, u4, ui4, ui1, yellow, m),
-                      new Rec(ui1, ui2, bi2, bi1, red, m) ,
-                      new Rec(ui3, ui2, bi2, bi3, red, m) ,
-                      new Rec(ui3, ui4, bi4, bi3, red, m) ,
-                      new Rec(ui1, ui4, bi4, bi1, red, m));
+                      new Rec(ui1, ui2, bi2, bi1, red1, m) , //internal sides
+                      new Rec(ui3, ui2, bi2, bi3, red2, m) ,
+                      new Rec(ui3, ui4, bi4, bi3, red1, m) ,
+                      new Rec(ui1, ui4, bi4, bi1, red2, m));
         }
     }
 
-    @Test
     public void testAll() {
         class Chair extends Geometries {
             //static private Point p1=new Point(0,0,0), p2=new Point(1,0,0), p3=new Point(0,0,1.5), p4=new Point(1, 0, 1.5),
@@ -120,7 +125,6 @@ public class FinalTest {
         camera2.writeToImage();
     }
 
-    @Test
     public void testPool() {
         Point b1 = new Point(-10, -20, -10);
         Point b2 = new Point(10, -20, -10);
@@ -194,18 +198,21 @@ public class FinalTest {
         Color yellow = new Color(180,180,0);
 
         Material wallM = new Material().setKd(0.5).setKs(0.5).setShininess(5);
-        Material poolM = new Material().setKd(0.5).setKs(0.5).setShininess(50);
+        Material poolM = new Material().setKd(0.5).setKs(0.9).setShininess(500);
+        Material floorM=new Material().setKd(0.5).setKs(0.5).setShininess(5).setKr(0.1);
 
         Point lightPlace=new Point(0, 0,96);
 
         Scene scene = new Scene("pool");
         Camera camera = new Camera(new Point(0, -200, 50), new Vector(0, 10, -1), new Vector(0, 1, 10)) //
                 .setVPSize(250, 250).setVPDistance(200);
-        scene.geometries.add(new Plane(new Point(0, 100, 0), new Vector(0, -1, 0)).setEmission(wallE).setMaterial(wallM));
-        scene.geometries.add(new Plane(new Point(100, 0, 0), new Vector(-1, 0, 0)).setEmission(wallE).setMaterial(wallM));
-        scene.geometries.add(new Plane(new Point(-100, 0, 0), new Vector(1, 0, 0)).setEmission(wallE).setMaterial(wallM));
-        scene.geometries.add(new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)).setEmission(new Color(50,50,50)).setMaterial(wallM));
-        scene.geometries.add(new Plane(new Point(0, 0, 100), new Vector(0, 0, -1)).setEmission(new Color(180,180,180)).setMaterial(wallM));
+        Camera cameraUp = new Camera(new Point(0, -100, 90), new Vector(0, 10, -9), new Vector(0, 9, 10)) //
+                .setVPSize(250, 250).setVPDistance(150);
+        scene.geometries.add(new Plane(new Point(0, 100, 0), new Vector(0, -1, 0)).setEmission(wallE).setMaterial(wallM)); //wall
+        scene.geometries.add(new Plane(new Point(100, 0, 0), new Vector(-1, 0, 0)).setEmission(wallE).setMaterial(wallM)); //right wall
+        scene.geometries.add(new Plane(new Point(-100, 0, 0), new Vector(1, 0, 0)).setEmission(wallE).setMaterial(wallM)); //left wall
+        scene.geometries.add(new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)).setEmission(new Color(50,50,50)).setMaterial(wallM)); //floor
+        scene.geometries.add(new Plane(new Point(0, 0, 100), new Vector(0, 0, -1)).setEmission(new Color(180,180,180)).setMaterial(wallM)); //tikra
 
         scene.geometries.add(new BallsPool(new Point(0,0,0), poolM));
         scene.geometries.add(new Sphere(lightPlace, 4).setEmission(yellow).setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50).setKt(0.85)));
@@ -228,12 +235,16 @@ public class FinalTest {
         //scene.geometries.add(new Rec(ui3, ui4, bi4, bi3, red, poolM));
         //scene.geometries.add(new Rec(ui1, ui4, bi4, bi1, red, poolM));
 
-        scene.lights.add(new SpotLight(new Color(RED), new Point(50,99, 99), new Vector(50,-99,-100)).setNarrowBeam(5).setKl(0.0001).setKq(0.00001));
-        scene.lights.add(new SpotLight(new Color(GREEN), new Point(-50,99, 99), new Vector(-50,-99,-100)).setNarrowBeam(5).setKl(0.0001).setKq(0.00001));
+        scene.lights.add(new SpotLight(new Color(RED), new Point(50,99, 99), new Vector(50,-99,-100)).setNarrowBeam(4).setKl(0.0001).setKq(0.00001));
+        scene.lights.add(new SpotLight(new Color(GREEN), new Point(-50,99, 99), new Vector(-50,-99,-100)).setNarrowBeam(4).setKl(0.0001).setKq(0.00001));
         scene.lights.add(new PointLight(new Color(40, 40, 20), lightPlace));
-        camera.setImageWriter(new ImageWriter("ballsPool", 500, 500)) //
+        camera.setImageWriter(new ImageWriter("ballsPool", 400, 400)) //
                 .setRayTracer(new RayTracerBasic(scene)) //
                 .renderImage(); //
         camera.writeToImage();
+        cameraUp.setImageWriter(new ImageWriter("ballsPoolUp", 400, 400)) //
+                .setRayTracer(new RayTracerBasic(scene)) //
+                .renderImage(); //
+        cameraUp.writeToImage();
     }
 }
