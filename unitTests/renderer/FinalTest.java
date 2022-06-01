@@ -18,16 +18,16 @@ import java.util.List;
 import static java.awt.Color.*;
 
 public class FinalTest {
-    static private Point
-            p1 = new Point(0, 0, -1.3),
-            p2 = new Point(1, 0, -1.3),
-            p3 = new Point(0, 0, 0),
-            p4 = new Point(1, 0, 0),
-            p5 = new Point(0, -1, -1.3),
-            p6 = new Point(1, -1, -1.3);
-    static private Material material = new Material().setKd(0.5).setKs(0.5).setShininess(300);
-    static private Color color = new Color(RED);
-    List<primitives.Color> colors = new LinkedList<primitives.Color>();
+    //static private Point
+            //p1 = new Point(0, 0, -1.3),
+            //p2 = new Point(1, 0, -1.3),
+            //p3 = new Point(0, 0, 0),
+            //p4 = new Point(1, 0, 0),
+            //p5 = new Point(0, -1, -1.3),
+            //p6 = new Point(1, -1, -1.3);
+    //static private Material material = new Material().setKd(0.5).setKs(0.5).setShininess(300);
+    //static private Color color = new Color(RED);
+    //List<primitives.Color> colors = new LinkedList<primitives.Color>();
 
     //colors.Add(new Color(YELLOW), new Color(GREEN), new Color(RED), new Color(BLUE));
     class Rec extends Geometries {
@@ -73,24 +73,57 @@ public class FinalTest {
                       new Rec(ui3, ui2, bi2, bi3, red, m) ,
                       new Rec(ui3, ui4, bi4, bi3, red, m) ,
                       new Rec(ui1, ui4, bi4, bi1, red, m));
+
+        }
+    }
+
+    class Slide extends Geometries{
+        Slide(Point center, Material material)
+        {
+            super();
+            Point br1 = center.add(new Vector(40,-10,0))
+                    ,br2 = center.add(new Vector(40,10,0))
+                    ,br3 = center.add(new Vector(30,10,0))
+                    ,br4 = center.add(new Vector(30,-10,0));
+            Point u1 = center.add(new Vector(0,-10, 40))
+                    ,u2 = center.add(new Vector(0,10,40))
+                    ,u3 = center.add(new Vector(-10,10,40))
+                    ,u4 = center.add(new Vector(-10,-10,40));
+            Point b1 = center.add(new Vector(0,-10, 30))
+                    ,b2 = center.add(new Vector(0,10,30))
+                    ,b3 = center.add(new Vector(-10,10,30))
+                    ,b4 = center.add(new Vector(-10,-10,30));
+            Point bl1 = center.add(new Vector(-40,-10,0))
+                    ,bl2 = center.add(new Vector(-40,10,0))
+                    ,bl3 = center.add(new Vector(-50,10,0))
+                    ,bl4 = center.add(new Vector(-50,-10,0));
+            Color red = new Color(200, 10, 10);
+            Color blue = new Color(10,10,200);
+            Color yellow = new Color(180,180,0);
+            super.add(new Rec(br1, br2, br3, br4, red, material)
+                    //,new Rec(br1, br2, u2, u1, red, material)
+                    //,new Rec(br2, u2, b2, br3, red, material)
+                    ,new Rec(br4,br3,b2,b1,red,material)
+                    ,new Rec(br4,br1,u1,b1,red,material)
+                    ,new Rec(b1,b2,u2,u1,red,material));
         }
     }
 
     @Test
     public void testAll() {
-        class Chair extends Geometries {
-            //static private Point p1=new Point(0,0,0), p2=new Point(1,0,0), p3=new Point(0,0,1.5), p4=new Point(1, 0, 1.5),
-            //        p5=new Point(0, -1, 0), p6=new Point(1, -1, 0);
-            static private Material material = new Material().setKd(0.5).setKs(0.5).setShininess(300);
-            static private Color color = new Color(WHITE);
-
-            public Chair() {
-                super(new Triangle(p1, p2, p3).setEmission(color),
-                        new Triangle(p2, p3, p4).setEmission(color),
-                        new Triangle(p1, p2, p6).setEmission(color),
-                        new Triangle(p1, p5, p6).setEmission(color));
-            }
-        }
+        //class Chair extends Geometries {
+        //    //static private Point p1=new Point(0,0,0), p2=new Point(1,0,0), p3=new Point(0,0,1.5), p4=new Point(1, 0, 1.5),
+        //    //        p5=new Point(0, -1, 0), p6=new Point(1, -1, 0);
+        //    static private Material material = new Material().setKd(0.5).setKs(0.5).setShininess(300);
+        //    static private Color color = new Color(WHITE);
+//
+        //    public Chair() {
+        //        super(new Triangle(p1, p2, p3).setEmission(color),
+        //                new Triangle(p2, p3, p4).setEmission(color),
+        //                new Triangle(p1, p2, p6).setEmission(color),
+        //                new Triangle(p1, p5, p6).setEmission(color));
+        //    }
+        //}
 
         Scene scene = new Scene("Test scene");
         Camera camera = new Camera(new Point(0, -50, 1), new Vector(0, 1, -0.02), new Vector(0, 0.02, 1)) //
@@ -98,13 +131,13 @@ public class FinalTest {
         Camera camera2 = new Camera(new Point(0, 0.5, 50), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
                 .setVPSize(5, 5).setVPDistance(50);
 
-        Geometry t = new Triangle(p1, p2, p3);
-        t.setEmission(color);
-        t.setMaterial(material);
-        scene.geometries.add( //
-                new Chair(),
-                new Plane(new Point(0, 0, -2), new Vector(0, 0, 1)).setEmission(new Color(GRAY))
-                        .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60).setKr(0.7)));
+        //Geometry t = new Triangle(p1, p2, p3);
+        //t.setEmission(color);
+        //t.setMaterial(material);
+        //scene.geometries.add( //
+        //        new Chair(),
+        //        new Plane(new Point(0, 0, -2), new Vector(0, 0, 1)).setEmission(new Color(GRAY))
+        //                .setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60).setKr(0.7)));
 
         scene.lights.add( //
                 new PointLight(new Color(200, 120, 0), new Point(1, 15, 1)) //
@@ -207,7 +240,8 @@ public class FinalTest {
         scene.geometries.add(new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)).setEmission(new Color(50,50,50)).setMaterial(wallM));
         scene.geometries.add(new Plane(new Point(0, 0, 100), new Vector(0, 0, -1)).setEmission(new Color(180,180,180)).setMaterial(wallM));
 
-        scene.geometries.add(new BallsPool(new Point(0,0,0), poolM));
+        //scene.geometries.add(new BallsPool(new Point(0,0,0), poolM));
+        scene.geometries.add(new Slide(new Point(0,0,0), poolM));
         scene.geometries.add(new Sphere(lightPlace, 4).setEmission(yellow).setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50).setKt(0.85)));
         scene.geometries.add(new Sphere(lightPlace.subtract(new Vector(0,0,4)), 10).setEmission(new Color(50,50,35)).setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50).setKt(0.9)));
 
