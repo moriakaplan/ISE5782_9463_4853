@@ -62,17 +62,25 @@ public class Triangle extends Polygon {
         if (l == null) return null;
         Point p0 = ray.getP0();
         Vector v = ray.getDir();
-        Vector v1 = vertices.get(0).subtract(p0);
-        Vector v2 = vertices.get(1).subtract(p0);
-        Vector v3 = vertices.get(2).subtract(p0);
-        Vector n1 = v1.crossProduct(v2);
-        Vector n2 = v2.crossProduct(v3);
-        Vector n3 = v3.crossProduct(v1);
+        Vector v1, v2, v3;
+        Vector n1, n2, n3;
+        try {
+            v1 = vertices.get(0).subtract(p0);
+            v2 = vertices.get(1).subtract(p0);
+            v3 = vertices.get(2).subtract(p0);
+
+            n1 = v1.crossProduct(v2);
+            n2 = v2.crossProduct(v3);
+            n3 = v3.crossProduct(v1);
+        }
+        catch(IllegalArgumentException ex){
+            return null;
+        }
         Double dp1 = alignZero(v.dotProduct(n1));
         Double dp2 = alignZero(v.dotProduct(n2));
         Double dp3 = alignZero(v.dotProduct(n3));
         if ((dp1 > 0 && dp2 > 0 && dp3 > 0) || (dp1 < 0 && dp2 < 0 && dp3 < 0))
             return List.of(new GeoPoint(this, l.get(0).point));
-        else return null;
+        return null;
     }
 }

@@ -2,7 +2,11 @@ package lighting;
 
 import primitives.Color;
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Class for point light- light with specific position.
@@ -52,6 +56,30 @@ public class PointLight extends Light implements LightSource {
     public PointLight setKq(double kQ) {
         this.kQ = kQ;
         return this;
+    }
+
+    @Override
+    public List<Ray> shadowRays(Point p, Vector directedN, double targetSize, int nRays) {
+        List<Ray> result = new LinkedList<Ray>();
+        Vector l=getL(p);
+        //Plane target=light.getTargetArea(p);
+        //Plane target=new Plane(position, l);
+        Vector vec = l.add(new Vector(0, 0, l.getZ())); //help vector for calculating the vectors in the target plane (just must be different from l and (0,0,0)
+        Vector v1 = l.crossProduct(vec).normalize();  //vector in the target plane (orthogonal to l).
+        Vector v2 = l.crossProduct(v1).normalize();   //vector in the target plane (orthogonal to l and v1).
+        Point corner = position.subtract(v1.scale(targetSize / 2))  //the corner of the target area.
+                               .subtract(v2.scale(targetSize / 2));
+        Point Pij;
+        for (int i = 0; i < nRays; i++) {
+            for (int j = 0; j < nRays; j++) {
+                //calculate one point in the grid on the target area.
+                Pij = corner;
+                if (i != 0) Pij = Pij.add(v1.scale((targetSize / nRays) * i));
+                if (j != 0) Pij = Pij.add(v2.scale((targetSize / nRays) * j));
+                result.add(new Ray(p, Pij.subtract(p), directedN));
+            }
+        }
+        return result;
     }
 
     @Override

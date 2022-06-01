@@ -7,11 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import static java.awt.Color.*;
 
-import renderer.ImageWriter;
 import lighting.*;
 import geometries.*;
 import primitives.*;
-import renderer.*;
 import scene.Scene;
 
 /**
@@ -52,7 +50,7 @@ public class ReflectionRefractionTests {
 	@Test
 	public void twoSpheresOnMirrors() {
 		Camera camera = new Camera(new Point(0, 0, 10000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
-				.setVPSize(2500, 2500).setVPDistance(10000); //
+				.setVPSize(2500, 2500).setVPDistance(10000).antiAliasingOn(9); //
 
 		scene.setAmbientLight(new AmbientLight(new Color(255, 255, 255), new Double3(0.1)));
 
@@ -131,7 +129,7 @@ public class ReflectionRefractionTests {
 
 		ImageWriter imageWriter = new ImageWriter("refractionShadowAntialiasing", 600, 600);
 		camera.setImageWriter(imageWriter) //
-				.setMultiRaysNum(27)
+				.antiAliasingOn(9)
 				.setRayTracer(new RayTracerBasic(scene)) //
 				.renderImage(); //
 		camera.writeToImage();

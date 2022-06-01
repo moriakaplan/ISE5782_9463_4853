@@ -3,6 +3,8 @@ package lighting;
 import primitives.Color;
 import primitives.*;
 
+import java.util.List;
+
 /**
  * interface for light sources.
  */
@@ -27,4 +29,11 @@ public interface LightSource {
      * @return the distance between the light source and the point.
      */
     public double getDistance(Point point);
+
+    /**
+     * create a list of rays from a point to the place of the light source- super sampling with grid.
+     * @param p point in the scene.
+     * @return list of rays from the point to the light source.
+     */
+    List<Ray> shadowRays(Point p, Vector directedN, double targetSize, int nRays);
 }
