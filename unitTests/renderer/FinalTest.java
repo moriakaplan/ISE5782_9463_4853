@@ -97,15 +97,60 @@ public class FinalTest {
                     ,bl2 = center.add(new Vector(-40,10,0))
                     ,bl3 = center.add(new Vector(-50,10,0))
                     ,bl4 = center.add(new Vector(-50,-10,0));
-            Color red = new Color(200, 10, 10);
+            Point s11 = center.add(new Vector(40, -10,10))
+                    ,s12 = center.add(new Vector(40, 10 , 10))
+                    ,s21 = center.add(new Vector(30, -10,20))
+                    ,s22 = center.add(new Vector(30, 10 , 20))
+                    ,s31 = center.add(new Vector(20, -10,30))
+                    ,s32 = center.add(new Vector(20, 10 , 30))
+                    ,s41 = center.add(new Vector(10, -10,40))
+                    ,s42 = center.add(new Vector(10, 10 , 40))
+                    ,si1 = center.add(new Vector(30, -10, 10))
+                    ,so1 = center.add(new Vector(30, 10, 10))
+                    ,si2 = center.add(new Vector(20, -10, 20))
+                    ,so2 = center.add(new Vector(20, 10, 20))
+                    ,si3 = center.add(new Vector(10, -10, 30))
+                    ,so3 = center.add(new Vector(10, 10, 30));
+            Color green = new Color(10, 200, 10);
             Color blue = new Color(10,10,200);
             Color yellow = new Color(180,180,0);
-            super.add(new Rec(br1, br2, br3, br4, red, material)
+            super.add(new Rec(br1, br2, br3, br4, green, material)
                     //,new Rec(br1, br2, u2, u1, red, material)
                     //,new Rec(br2, u2, b2, br3, red, material)
-                    ,new Rec(br4,br3,b2,b1,red,material)
-                    ,new Rec(br4,br1,u1,b1,red,material)
-                    ,new Rec(b1,b2,u2,u1,red,material));
+                    ,new Rec(br4,br3,b2,b1,green,material)
+                    ,new Rec(br4,br1,u1,b1,green,material)
+                    ,new Rec(b1,b2,u2,u1,green,material)
+
+                    ,new Triangle(s11, br1, si1).setEmission(green).setMaterial(material)
+                    ,new Rec(br1, br2, s12, s11, green, material)
+                    ,new Triangle(br2, s12, so1).setEmission(green).setMaterial(material)
+                    ,new Rec(s11, s12, so1, si1, green, material)
+
+                    ,new Triangle(s21, si2, si1).setEmission(green).setMaterial(material)
+                    ,new Rec(si1, so1, s22, s21, green, material)
+                    ,new Triangle(s22, so2, so1).setEmission(green).setMaterial(material)
+                    ,new Rec(s21, s22, so2, si2, green, material)
+
+                    ,new Triangle(s31, si3, si2).setEmission(green).setMaterial(material)
+                    ,new Rec(si2, so2, s32, s31, green, material)
+                    ,new Triangle(so3, s32, so2).setEmission(green).setMaterial(material)
+                    ,new Rec(s31, s32, so3, si3, green, material)
+
+                    ,new Triangle(s41, u1, si3).setEmission(green).setMaterial(material)
+                    ,new Rec(si3, so3, s42, s41, green, material)
+                    ,new Triangle(u2, s42, so3).setEmission(green).setMaterial(material)
+                    ,new Rec(s41, s42, u2, u1, green, material)
+
+                    ,new Rec(b1, b2, b3, b4, green, material)
+                    ,new Rec(b1, u1, u4, b4, green, material)
+                    ,new Rec(u1, u2, u3, u4, green, material)
+                    ,new Rec(u2, b2, b3, u3, green, material)
+                    ,new Rec(bl1, bl2, bl3, bl4, green, material)
+                    ,new Rec(bl1, bl2, b3, b4, green, material)
+                    ,new Rec(bl1, b4, u4, bl4, green, material)
+                    ,new Rec(bl4, bl3, u3, u4, green, material)
+                    ,new Rec(bl2, b3, u3, bl3, green, material));
+
         }
     }
 
@@ -242,8 +287,8 @@ public class FinalTest {
         scene.geometries.add(new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)).setEmission(new Color(50,50,50)).setMaterial(wallM));
         scene.geometries.add(new Plane(new Point(0, 0, 100), new Vector(0, 0, -1)).setEmission(new Color(180,180,180)).setMaterial(wallM));
 
-        //scene.geometries.add(new BallsPool(new Point(0,0,0), poolM));
-        scene.geometries.add(new Slide(new Point(0,0,0), poolM));
+        scene.geometries.add(new BallsPool(new Point(0,0,0), poolM));
+        scene.geometries.add(new Slide(new Point(40,0,0), poolM));
         scene.geometries.add(new Sphere(lightPlace, 4).setEmission(yellow).setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50).setKt(0.85)));
         scene.geometries.add(new Sphere(lightPlace.subtract(new Vector(0,0,4)), 10).setEmission(new Color(50,50,35)).setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50).setKt(0.9)));
 
