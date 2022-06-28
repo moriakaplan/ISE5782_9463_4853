@@ -5,17 +5,16 @@ import lighting.DirectionalLight;
 import lighting.PointLight;
 import lighting.SpotLight;
 import org.junit.jupiter.api.Test;
-import primitives.Color;
-import primitives.Material;
-import primitives.Point;
-import primitives.Vector;
+import primitives.*;
 import scene.Scene;
 
 import javax.swing.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import static java.awt.Color.*;
+
 
 public class FinalTest {
     //static private Point
@@ -27,9 +26,7 @@ public class FinalTest {
             //p6 = new Point(1, -1, -1.3);
     //static private Material material = new Material().setKd(0.5).setKs(0.5).setShininess(300);
     //static private Color color = new Color(RED);
-    //List<primitives.Color> colors = new LinkedList<primitives.Color>();
 
-    //colors.Add(new Color(YELLOW), new Color(GREEN), new Color(RED), new Color(BLUE));
     class Rec extends Geometries {
         Rec(Point p1, Point p2, Point p3, Point p4, Color emission, Material material) {
             super(new Triangle(p1, p2, p3).setEmission(emission).setMaterial(material),
@@ -39,7 +36,6 @@ public class FinalTest {
 
     class BallsPool extends Geometries{
         BallsPool(Point center, Material m){
-            super();
             Point b1 = center.add(new Vector(-40, -40, 0))
                     ,b2 = center.add(new Vector(40, -40, 0))
                     ,b3 = center.add(new Vector(40, 40, 0))
@@ -109,6 +105,32 @@ public class FinalTest {
         }
     }
 
+    class BallsGrid extends Geometries{
+        BallsGrid(Point start, Vector v1, Vector v2, int size1, int size2, double radius, Material material){
+            v1.normalize();
+            v2.normalize();
+            Point center;
+            for (int i = 0; i < size1; i++) {
+                for (int j = 0; j < size2; j++) {
+                    center = start.add(v1.scale(radius*1.01*(1+2*i))).add(v2.scale(radius*1.01*(1+2*j)));
+                    super.add(new Sphere(center, radius).setEmission(randColor()).setMaterial(material));
+                }
+            }
+        }
+    }
+
+    Color randColor(){
+        List<Color> colors = new LinkedList<Color>();
+        colors.add(new Color(200,200,0));
+        colors.add(new Color(10,10,150));
+        colors.add(new Color(150,10,10));
+        colors.add(new Color(200, 100,100));
+        colors.add(new Color(10,150,10));
+        Random rand = new Random();
+        int i=rand.nextInt(colors.size());
+        return colors.get(i);
+        //return new Color(rand.nextInt(200),rand.nextInt(200),rand.nextInt(200));
+    }
     @Test
     public void testAll() {
         //class Chair extends Geometries {
@@ -227,14 +249,14 @@ public class FinalTest {
         Color yellow = new Color(180,180,0);
 
         Material wallM = new Material().setKd(0.5).setKs(0.5).setShininess(5);
-        Material poolM = new Material().setKd(0.5).setKs(0.5).setShininess(50);
+        Material poolM = new Material().setKd(0.7).setKs(0.8).setShininess(150);
 
         Point lightPlace=new Point(0, 0,96);
 
         Scene scene = new Scene("pool");
         Camera camera = new Camera(new Point(0, -200, 50), new Vector(0, 10, -1), new Vector(0, 1, 10)) //
                 .setVPSize(250, 250).setVPDistance(200);
-        Camera cameraUp = new Camera(new Point(0, -100, 90), new Vector(0, 10, -9), new Vector(0, 9, 10)) //
+        Camera cameraUp = new Camera(new Point(0, -80, 90), new Vector(0, 10, -9), new Vector(0, 9, 10)) //
                 .setVPSize(250, 250).setVPDistance(150);
         scene.geometries.add(new Plane(new Point(0, 100, 0), new Vector(0, -1, 0)).setEmission(wallE).setMaterial(wallM));
         scene.geometries.add(new Plane(new Point(100, 0, 0), new Vector(-1, 0, 0)).setEmission(wallE).setMaterial(wallM));
@@ -242,8 +264,12 @@ public class FinalTest {
         scene.geometries.add(new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)).setEmission(new Color(50,50,50)).setMaterial(wallM));
         scene.geometries.add(new Plane(new Point(0, 0, 100), new Vector(0, 0, -1)).setEmission(new Color(180,180,180)).setMaterial(wallM));
 
-        //scene.geometries.add(new BallsPool(new Point(0,0,0), poolM));
-        scene.geometries.add(new Slide(new Point(0,0,0), poolM));
+        scene.geometries.add(new BallsPool(new Point(0,0,0), poolM));
+        //scene.geometries.add(new Slide(new Point(0,0,0), poolM));
+        //scene.geometries.add(new BallsGrid(new Point(28,28,3), new Vector(-1,0,0), new Vector(0,-1,0), 11,11, 2.5, poolM));
+        //scene.geometries.add(new BallsGrid(new Point(25.5,25.5,6.25), new Vector(-1,0,0), new Vector(0,-1,0), 10,10, 2.5, poolM));
+        //scene.geometries.add(new BallsGrid(new Point(0,23,10.5), new Vector(-1,0,0), new Vector(0,-1,0), 5,8, 2.5, poolM));
+        //scene.geometries.add(new BallsGrid(new Point(40,40,25), new Vector(-1,0,0), new Vector(0,-1,0), 2,2, 10, poolM));
         scene.geometries.add(new Sphere(lightPlace, 4).setEmission(yellow).setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50).setKt(0.85)));
         scene.geometries.add(new Sphere(lightPlace.subtract(new Vector(0,0,4)), 10).setEmission(new Color(50,50,35)).setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50).setKt(0.9)));
 
@@ -267,14 +293,16 @@ public class FinalTest {
         scene.lights.add(new SpotLight(new Color(RED), new Point(50,99, 99), new Vector(50,-99,-100)).setNarrowBeam(5).setKl(0.0001).setKq(0.00001));
         scene.lights.add(new SpotLight(new Color(GREEN), new Point(-50,99, 99), new Vector(-50,-99,-100)).setNarrowBeam(5).setKl(0.0001).setKq(0.00001));
         scene.lights.add(new PointLight(new Color(40, 40, 20), lightPlace));
-        camera.setImageWriter(new ImageWriter("ballsPool", 500, 500)) //
+        scene.lights.add(new PointLight(new Color(100,100,100), new Point(0, -200, 50)));
+        scene.softShadowOn(7, 3);
+        camera.setImageWriter(new ImageWriter("ballsPoolSoftShadow", 500, 500)) //
                 .setRayTracer(new RayTracerBasic(scene)) //
                 .renderImage(); //
         camera.writeToImage();
-        cameraUp.setImageWriter(new ImageWriter("ballsPoolUp", 400, 400)) //
-                .setRayTracer(new RayTracerBasic(scene)) //
-                .renderImage(); //
-        cameraUp.writeToImage();
+        //cameraUp.setImageWriter(new ImageWriter("ballsPoolUp", 400, 400)) //
+        //        .setRayTracer(new RayTracerBasic(scene)) //
+        //        .renderImage(); //
+        //cameraUp.writeToImage();
     }
 }
 

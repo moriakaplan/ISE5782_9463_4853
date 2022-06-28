@@ -1,6 +1,7 @@
 package renderer;
 
 import primitives.*;
+import scene.Scene;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class Camera {
     private RayTracerBase rayTracer;
     //private boolean superSampling = false;
     private int antiAliasingNumRays = 1;
+
 
     /**
      * constructor for the camera's data.

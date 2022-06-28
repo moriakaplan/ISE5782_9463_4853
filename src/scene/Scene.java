@@ -22,6 +22,33 @@ public class Scene {
     public double softShadowTargetSize = 0;
     public int softShadowNumRays = 1;
 
+    /**
+     * start the soft shadow improvement.
+     * set the softShadowNumRays field
+     * @param numRays numRays^2 is the number of shadow rays
+     * @param areaSize areaSize^2 is the size of the target area
+     * @return the scene object
+     */
+    public Scene softShadowOn(int numRays, double areaSize) {
+        if (numRays < 1) {
+            throw new IllegalArgumentException("number of shadow rays must be positive");
+        }
+        if(isZero(areaSize)){
+            throw new IllegalArgumentException("the size of the target area of soft shadow must be positive");
+        }
+        this.softShadowNumRays = numRays;
+        this.softShadowTargetSize = areaSize;
+        return this;
+    }
+
+    /**
+     * stop the soft shadow improvement.
+     * @return the scene object
+     */
+    public Scene softShadowOff() {
+        this.softShadowNumRays = 1;
+        return this;
+    }
 
     /**
      * constructor- set the name of the scene and create empty list of geometries.
@@ -84,33 +111,6 @@ public class Scene {
         return this;
     }
 
-    /**
-     * start the soft shadow improvement.
-     * set the softShadowNumRays field
-     * @param numRays numRays^2 is the number of shadow rays
-     * @param areaSize areaSize^2 is the size of the target area
-     * @return the scene object
-     */
-    public Scene softShadowOn(int numRays, double areaSize) {
-        if (numRays < 1) {
-            throw new IllegalArgumentException("number of shadow rays must be positive");
-        }
-        if(isZero(areaSize)){
-            throw new IllegalArgumentException("the size of the target area of soft shadow must be positive");
-        }
-        this.softShadowNumRays = numRays;
-        this.softShadowTargetSize = areaSize;
-        return this;
-    }
-
-    /**
-     * stop the soft shadow improvement.
-     * @return the scene object
-     */
-    public Scene softShadowOff() {
-        this.softShadowNumRays = 1;
-        return this;
-    }
 
     /* builder- class scene
     private final String name;
