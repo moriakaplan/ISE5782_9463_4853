@@ -64,7 +64,7 @@ public class ShadowTests {
 	 */
 	@Test
 	public void sphereTriangleMove2() {
-		camera.antiAliasingOn(9);
+		camera.antiAliasingOn(9, false);
 		sphereTriangleHelper("softShadowSphereTriangleMove2", //
 				new Triangle(new Point(-49, -19, 0), new Point(-19, -49, 0), new Point(-47, -47, -4)), //
 				new Point(-100, -100, 200));

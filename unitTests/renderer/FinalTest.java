@@ -14,6 +14,7 @@ import scene.Scene;
 import javax.swing.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import static java.awt.Color.*;
 
@@ -153,6 +154,7 @@ public class FinalTest {
 
         }
     }
+
 
     class BallsGrid extends Geometries{
         BallsGrid(Point start, Vector v1, Vector v2, int size1, int size2, double radius, Material material){
@@ -315,10 +317,10 @@ public class FinalTest {
 
         scene.geometries.add(new BallsPool(new Point(0,0,0), poolM));
         //scene.geometries.add(new Slide(new Point(0,0,0), poolM));
-        //scene.geometries.add(new BallsGrid(new Point(28,28,3), new Vector(-1,0,0), new Vector(0,-1,0), 11,11, 2.5, poolM));
-        //scene.geometries.add(new BallsGrid(new Point(25.5,25.5,6.25), new Vector(-1,0,0), new Vector(0,-1,0), 10,10, 2.5, poolM));
-        //scene.geometries.add(new BallsGrid(new Point(0,23,10.5), new Vector(-1,0,0), new Vector(0,-1,0), 5,8, 2.5, poolM));
-        //scene.geometries.add(new BallsGrid(new Point(40,40,25), new Vector(-1,0,0), new Vector(0,-1,0), 2,2, 10, poolM));
+        scene.geometries.add(new BallsGrid(new Point(28,28,3), new Vector(-1,0,0), new Vector(0,-1,0), 11,11, 2.5, poolM));
+        scene.geometries.add(new BallsGrid(new Point(25.5,25.5,6.25), new Vector(-1,0,0), new Vector(0,-1,0), 10,10, 2.5, poolM));
+        scene.geometries.add(new BallsGrid(new Point(0,23,10.5), new Vector(-1,0,0), new Vector(0,-1,0), 5,8, 2.5, poolM));
+        scene.geometries.add(new BallsGrid(new Point(40,40,25), new Vector(-1,0,0), new Vector(0,-1,0), 2,2, 10, poolM));
         scene.geometries.add(new BallsPool(new Point(0,0,0), poolM));
         scene.geometries.add(new Slide(new Point(40,0,0), poolM));
         scene.geometries.add(new Sphere(lightPlace, 4).setEmission(yellow).setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50).setKt(0.85)));
@@ -345,15 +347,15 @@ public class FinalTest {
         scene.lights.add(new SpotLight(new Color(GREEN), new Point(-50,99, 99), new Vector(-50,-99,-100)).setNarrowBeam(5).setKl(0.0001).setKq(0.00001));
         scene.lights.add(new PointLight(new Color(40, 40, 20), lightPlace));
         scene.lights.add(new PointLight(new Color(100,100,100), new Point(0, -200, 50)));
-        scene.softShadowOn(7, 3);
-        camera.setImageWriter(new ImageWriter("ballsPoolSoftShadow", 500, 500)) //
+        //scene.softShadowOn(7, 3);
+        camera.setImageWriter(new ImageWriter("ballsPool", 500, 500)) //
                 .setRayTracer(new RayTracerBasic(scene)) //
                 .renderImage(); //
         camera.writeToImage();
-        //cameraUp.setImageWriter(new ImageWriter("ballsPoolUp", 400, 400)) //
-        //        .setRayTracer(new RayTracerBasic(scene)) //
-        //        .renderImage(); //
-        //cameraUp.writeToImage();
+        cameraUp.setImageWriter(new ImageWriter("ballsPoolUp", 400, 400)) //
+                .setRayTracer(new RayTracerBasic(scene)) //
+                .renderImage(); //
+        cameraUp.writeToImage();
     }
 }
 

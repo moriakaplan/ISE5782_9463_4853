@@ -20,10 +20,10 @@ public class LightsTests {
 			.setAmbientLight(new AmbientLight(new Color(WHITE), new Double3(0.15)));
 	private Camera camera1 = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
 			.setVPSize(150, 150) //
-			.setVPDistance(1000).antiAliasingOn(3);
+			.setVPDistance(1000).antiAliasingOn(3, false);
 	private Camera camera2 = new Camera(new Point(0, 0, 1000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
 			.setVPSize(200, 200) //
-			.setVPDistance(1000).antiAliasingOn(5);
+			.setVPDistance(1000).antiAliasingOn(5, false);
 
 	private Point[] p = { // The Triangles' vertices:
 			new Point(-110, -110, -150), // the shared left-bottom

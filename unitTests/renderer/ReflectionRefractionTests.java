@@ -50,7 +50,7 @@ public class ReflectionRefractionTests {
 	@Test
 	public void twoSpheresOnMirrors() {
 		Camera camera = new Camera(new Point(0, 0, 10000), new Vector(0, 0, -1), new Vector(0, 1, 0)) //
-				.setVPSize(2500, 2500).setVPDistance(10000).antiAliasingOn(9); //
+				.setVPSize(2500, 2500).setVPDistance(10000).antiAliasingOn(9, false); //
 
 		scene.setAmbientLight(new AmbientLight(new Color(255, 255, 255), new Double3(0.1)));
 
@@ -98,8 +98,8 @@ public class ReflectionRefractionTests {
 
 		scene.lights.add(new SpotLight(new Color(700, 400, 400), new Point(60, 50, 0), new Vector(0, 0, -1)) //
 				.setKl(4E-5).setKq(2E-7));
-
-		ImageWriter imageWriter = new ImageWriter("refractionShadow", 600, 600);
+		camera.antiAliasingOn(9, true);
+		ImageWriter imageWriter = new ImageWriter("refractionShadowAdaptiveSuperSampling", 600, 600);
 		camera.setImageWriter(imageWriter) //
 				.setRayTracer(new RayTracerBasic(scene)) //
 				.renderImage(); //
@@ -129,7 +129,7 @@ public class ReflectionRefractionTests {
 
 		ImageWriter imageWriter = new ImageWriter("refractionShadowAntialiasing", 600, 600);
 		camera.setImageWriter(imageWriter) //
-				.antiAliasingOn(9)
+				.antiAliasingOn(9, false)
 				.setRayTracer(new RayTracerBasic(scene)) //
 				.renderImage(); //
 		camera.writeToImage();

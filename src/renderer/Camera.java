@@ -26,6 +26,7 @@ public class Camera {
     private RayTracerBase rayTracer;
     //private boolean superSampling = false;
     private int antiAliasingNumRays = 1;
+    private boolean adaptiveSuperSampling= false;
 
 
     /**
@@ -47,19 +48,22 @@ public class Camera {
     /**
      * start the anti aliasing improvement.
      * set the multiRaysNum field
+     *
      * @param multiRaysNum multiRaysNum^2 is the number of rays through a pixel
      * @return the camera object
      */
-    public Camera antiAliasingOn(int multiRaysNum) {
+    public Camera antiAliasingOn(int multiRaysNum, boolean adaptive) {
         if (multiRaysNum < 1) {
             throw new IllegalArgumentException("number of rays through pixels must be positive");
         }
         this.antiAliasingNumRays = multiRaysNum;
+        this.adaptiveSuperSampling=adaptive;
         return this;
     }
 
     /**
      * stop the anti aliasing improvement.
+     *
      * @return
      */
     public Camera AntiAliasingOff() {
@@ -104,6 +108,58 @@ public class Camera {
             }
         }
         return result;
+    }
+
+    /**
+     * find the rays that go through the specific pixel in the view plane.
+     *
+     * @param nX the amount of columns of pixels.
+     * @param nY the amount of rows of pixels.
+     * @param j  the specific column of the wanted pixel.
+     * @param i  the specific row of the wanted pixel.
+     * @return the ray that go through the pixel.
+     */
+    public Color pixelColorAdaptiveSuperSampling(int nX, int nY, int j, int i) {
+        //view plane center
+        Point Pc = location.add(vTo.scale(distance));
+        //ratio- pixel height and width
+        double pixelHeight = (double) height / nY;
+        double pixelWidth = (double) width / nX;
+        double cellHeight = (double) pixelHeight / antiAliasingNumRays;
+        double cellWidth = (double) pixelWidth / antiAliasingNumRays;
+
+        //pixel[i,j] center
+        Point Pij = Pc;
+        Point point;
+        double Yi = -(0.5 + i - (nY - 1) / 2d) * pixelHeight + 0.5 * cellHeight; //how to move from the center of the view plane.
+        double Xj = (-0.5 + j - (nX - 1) / 2d) * pixelWidth + 0.5 * cellWidth;
+        if (Xj != 0)
+            Pij = Pij.add(vRight.scale(Xj));
+        if (Yi != 0)
+            Pij = Pij.add(vUp.scale(Yi));
+        return recursiveConstructRay(Pij, pixelHeight, pixelWidth, vUp, vRight, 3);//***
+    }
+
+    public Color recursiveConstructRay(Point corner, double height, double width, Vector vUp, Vector vRight, int level) {
+        Point pUpLeft = corner.add(vUp.scale(height));
+        Point pDownRight = corner.add(vRight.scale(width));
+        Point pUpRight = corner.add(vUp.scale(height)).add(vRight.scale(width));
+        Color cUpLeft = castRay(new Ray(this.location, pUpLeft.subtract(this.location)));
+        Color cUpRight = castRay(new Ray(this.location, pUpRight.subtract(this.location)));
+        Color cDownLeft = castRay(new Ray(this.location, corner.subtract(this.location)));
+        Color cDownRight = castRay(new Ray(this.location, pDownRight.subtract(this.location)));
+        if (cDownLeft.equals(cUpLeft) && cUpLeft.equals(cUpRight) && cUpRight.equals(cDownRight))
+            return cDownLeft;
+        if(level>0) {
+            pUpLeft = corner.add(vUp.scale(height / 2));
+            pDownRight = corner.add(vRight.scale(width / 2));
+            pUpRight = corner.add(vUp.scale(height / 2)).add(vRight.scale(width / 2));
+            cUpLeft = recursiveConstructRay(pUpLeft, height / 2, width / 2, vUp, vRight, level-1);
+            cUpRight = recursiveConstructRay(pUpRight, height / 2, width / 2, vUp, vRight, level-1);
+            cDownLeft = recursiveConstructRay(corner, height / 2, width / 2, vUp, vRight, level-1);
+            cDownRight = recursiveConstructRay(pDownRight, height / 2, width / 2, vUp, vRight, level-1);
+        }
+        return cDownLeft.add(cDownRight).add(cUpLeft).add(cUpRight).reduce(4);
     }
 
     /**
@@ -161,7 +217,11 @@ public class Camera {
                 if (antiAliasingNumRays == 1) {
                     Ray ray = constructRay(Nx, Ny, j, i);
                     color = castRay(ray);
-                } else {
+                }
+                else if(adaptiveSuperSampling){
+                     color = pixelColorAdaptiveSuperSampling(Nx, Ny, j, i);
+                }
+                else {
                     List<Ray> rays = constructRaySuperSampling(Nx, Ny, j, i);
                     color = Color.BLACK;
                     for (Ray ray :
