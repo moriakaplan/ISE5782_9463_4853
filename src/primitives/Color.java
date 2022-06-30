@@ -149,7 +149,8 @@ public class Color {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Color color = (Color) o;
-		return rgb.equals(color.rgb);
+		return (int)rgb.d1 == (int)color.rgb.d1 && (int)rgb.d2 == (int)color.rgb.d2 && (int)rgb.d3 == (int)color.rgb.d3;
+		//return rgb.equals(color.rgb);
 	}
 
 	@Override
