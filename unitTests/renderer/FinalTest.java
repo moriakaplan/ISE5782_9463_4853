@@ -88,16 +88,16 @@ public class FinalTest {
                     ,br4 = center.add(new Vector(30,-10,0));
             Point u1 = center.add(new Vector(0,-10, 40))
                     ,u2 = center.add(new Vector(0,10,40))
-                    ,u3 = center.add(new Vector(-10,10,40))
-                    ,u4 = center.add(new Vector(-10,-10,40));
+                    ,u3 = u2 //center.add(new Vector(-10,10,40))
+                    ,u4 = u1; //center.add(new Vector(-10,-10,40));
             Point b1 = center.add(new Vector(0,-10, 30))
                     ,b2 = center.add(new Vector(0,10,30))
-                    ,b3 = center.add(new Vector(-10,10,30))
-                    ,b4 = center.add(new Vector(-10,-10,30));
-            Point bl1 = center.add(new Vector(-40,-10,0))
-                    ,bl2 = center.add(new Vector(-40,10,0))
-                    ,bl3 = center.add(new Vector(-50,10,0))
-                    ,bl4 = center.add(new Vector(-50,-10,0));
+                    ,b3 = b2 //center.add(new Vector(-10,10,30))
+                    ,b4 = b1; //center.add(new Vector(-10,-10,30));
+            Point bl1 = center.add(new Vector(-30,-10,0))
+                    ,bl2 = center.add(new Vector(-30,10,0))
+                    ,bl3 = center.add(new Vector(-40,10,0))
+                    ,bl4 = center.add(new Vector(-40,-10,0));
             Point s11 = center.add(new Vector(40, -10,10))
                     ,s12 = center.add(new Vector(40, 10 , 10))
                     ,s21 = center.add(new Vector(30, -10,20))
@@ -142,10 +142,10 @@ public class FinalTest {
                     ,new Triangle(u2, s42, so3).setEmission(green).setMaterial(material)
                     ,new Rec(s41, s42, u2, u1, green, material)
 
-                    ,new Rec(b1, b2, b3, b4, green, material)
-                    ,new Rec(b1, u1, u4, b4, green, material)
-                    ,new Rec(u1, u2, u3, u4, green, material)
-                    ,new Rec(u2, b2, b3, u3, green, material)
+                    //,new Rec(b1, b2, b3, b4, green, material)
+                    //,new Rec(b1, u1, u4, b4, green, material)
+                    //,new Rec(u1, u2, u3, u4, green, material)
+                    //,new Rec(u2, b2, b3, u3, green, material)
                     ,new Rec(bl1, bl2, bl3, bl4, green, material)
                     ,new Rec(bl1, bl2, b3, b4, green, material)
                     ,new Rec(bl1, b4, u4, bl4, green, material)
@@ -320,7 +320,7 @@ public class FinalTest {
         scene.geometries.add(new BallsGrid(new Point(28,28,3), new Vector(-1,0,0), new Vector(0,-1,0), 11,11, 2.5, poolM));
         scene.geometries.add(new BallsGrid(new Point(25.5,25.5,6.25), new Vector(-1,0,0), new Vector(0,-1,0), 10,10, 2.5, poolM));
         scene.geometries.add(new BallsGrid(new Point(0,23,10.5), new Vector(-1,0,0), new Vector(0,-1,0), 5,8, 2.5, poolM));
-        scene.geometries.add(new BallsGrid(new Point(40,40,25), new Vector(-1,0,0), new Vector(0,-1,0), 2,2, 10, poolM));
+        //scene.geometries.add(new BallsGrid(new Point(40,40,25), new Vector(-1,0,0), new Vector(0,-1,0), 2,2, 10, poolM));
         scene.geometries.add(new BallsPool(new Point(0,0,0), poolM));
         scene.geometries.add(new Slide(new Point(40,0,0), poolM));
         scene.geometries.add(new Sphere(lightPlace, 4).setEmission(yellow).setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50).setKt(0.85)));
