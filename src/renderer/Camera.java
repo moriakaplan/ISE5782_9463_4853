@@ -1,7 +1,6 @@
 package renderer;
 
 import primitives.*;
-import scene.Scene;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -119,7 +118,7 @@ public class Camera {
      * @param i  the specific row of the wanted pixel.
      * @return the ray that go through the pixel.
      */
-    public Color pixelColorAdaptiveSuperSampling(int nX, int nY, int j, int i) {
+    public Color pixelColorASS(int nX, int nY, int j, int i) {
         //view plane center
         Point Pc = location.add(vTo.scale(distance));
         //ratio- pixel height and width
@@ -137,7 +136,50 @@ public class Camera {
             Pij = Pij.add(vRight.scale(Xj));
         if (Yi != 0)
             Pij = Pij.add(vUp.scale(Yi));
-        return recursiveConstructRay(Pij, pixelHeight, pixelWidth, vUp, vRight, 3);//***
+        List<Color> colors=List.of(  //find the colors of the corners of the pixel
+                castRay(new Ray(this.location, Pij.subtract(this.location))),
+                castRay(new Ray(this.location, Pij.add(vUp.scale(pixelHeight)).subtract(this.location))),
+                castRay(new Ray(this.location, Pij.add(vUp.scale(pixelHeight)).add(vRight.scale(pixelWidth)).subtract(this.location))),
+                castRay(new Ray(this.location, Pij.add(vRight.scale(pixelWidth)).subtract(this.location))));
+        return recursiveConstructRay(Pij, colors, pixelHeight, pixelWidth, vUp, vRight, (int)Math.log(antiAliasingNumRays-1));//***
+    }
+
+    /**
+     * calculate the color of area with adaptive super sampling- calculate the average of recursions.
+     * @param corner the left down corner of the area.
+     * @param c the colors of the 4 corners, arranged clockwise. 0 if the left down, 1 if the left up, 2 if the right up, 3 if the right down.
+     * @param height the height of the area.
+     * @param width the width of the area.
+     * @param vUp the vector of the direction up.
+     * @param vRight the vector of the direction right.
+     * @param level the level of the recursion (we stop at level 0)
+     * @return the color of the area (average of the colors that returned from the recursions.
+     */
+    public Color recursiveConstructRay(Point corner, List<Color> c, double height, double width, Vector vUp, Vector vRight, int level) {
+        //if the colors are very similar return this color.
+        if (c.get(0).equals(c.get(1)) && c.get(0).equals(c.get(2)) && c.get(0).equals(c.get(3)))
+            return c.get(0);
+        //stop the recursion.
+        if(level<=0) {
+            return c.get(0).add(c.get(1)).add(c.get(2)).add(c.get(3)).reduce(4);
+        }
+        // 01 if the point (and the color) between the point p0 and p1 (for example).
+        //Finds 3 internal points to be sent to the recursive calls.
+        Point p01= corner.add(vUp.scale(height/2));
+        Point p31= corner.add(vRight.scale(width/2));
+        Point pCenter= corner.add(vUp.scale(height/2)).add(vRight.scale(width/2));
+        //find the colors of all the internal points.
+        Color c01=castRay(new Ray(this.location, p01.subtract(this.location)));
+        Color c12=castRay(new Ray(this.location, corner.add(vUp.scale(height)).add(vRight.scale(width/2)).subtract(this.location)));
+        Color c23=castRay(new Ray(this.location, corner.add(vUp.scale(height/2)).add(vRight.scale(width)).subtract(this.location)));
+        Color c31=castRay(new Ray(this.location, p31.subtract(this.location)));
+        Color cCenter=castRay(new Ray(this.location, pCenter.subtract(this.location)));
+        //call the recursions and calculate the average.
+        return  recursiveConstructRay(corner, List.of(c.get(0), c01, cCenter, c31), height / 2, width / 2, vUp, vRight, level-1)
+                .add(recursiveConstructRay(p01, List.of(c01, c.get(1), c12, cCenter), height / 2, width / 2, vUp, vRight, level-1))
+                .add(recursiveConstructRay(pCenter, List.of(cCenter, c12, c.get(2), c23), height / 2, width / 2, vUp, vRight, level-1))
+                .add(recursiveConstructRay(p31, List.of(c31, cCenter, c23, c.get(3)), height / 2, width / 2, vUp, vRight, level-1))
+                .reduce(4);
     }
 
     public Color recursiveConstructRay(Point corner, double height, double width, Vector vUp, Vector vRight, int level) {
@@ -158,6 +200,28 @@ public class Camera {
             cUpRight = recursiveConstructRay(pUpRight, height / 2, width / 2, vUp, vRight, level-1);
             cDownLeft = recursiveConstructRay(corner, height / 2, width / 2, vUp, vRight, level-1);
             cDownRight = recursiveConstructRay(pDownRight, height / 2, width / 2, vUp, vRight, level-1);
+        }
+        return cDownLeft.add(cDownRight).add(cUpLeft).add(cUpRight).reduce(4);
+    }
+
+    public Color recursiveConstructRay(Point corner, Color cDownLeft, double height, double width, Vector vUp, Vector vRight, int level) {
+        Point pUpLeft = corner.add(vUp.scale(height));
+        Point pDownRight = corner.add(vRight.scale(width));
+        Point pUpRight = corner.add(vUp.scale(height)).add(vRight.scale(width));
+        Color cUpLeft = castRay(new Ray(this.location, pUpLeft.subtract(this.location)));
+        Color cUpRight = castRay(new Ray(this.location, pUpRight.subtract(this.location)));
+        //Color cDownLeft = castRay(new Ray(this.location, corner.subtract(this.location)));
+        Color cDownRight = castRay(new Ray(this.location, pDownRight.subtract(this.location)));
+        if (cDownLeft.equals(cUpLeft) && cUpLeft.equals(cUpRight) && cUpRight.equals(cDownRight))
+            return cDownLeft;
+        if(level>0) {
+            //pUpLeft = corner.add(vUp.scale(height / 2));
+            //pDownRight = corner.add(vRight.scale(width / 2));
+            //pUpRight = corner.add(vUp.scale(height / 2)).add(vRight.scale(width / 2));
+            cDownLeft = recursiveConstructRay(corner, cDownLeft, height / 2, width / 2, vUp, vRight, level-1);
+            cUpLeft = recursiveConstructRay(pUpLeft, cUpLeft, height / 2, width / 2, vUp.scale(-1), vRight, level-1);
+            cUpRight = recursiveConstructRay(pUpRight, cUpRight, height / 2, width / 2, vUp.scale(-1), vRight.scale(-1), level-1);
+            cDownRight = recursiveConstructRay(pDownRight, cDownRight, height / 2, width / 2, vUp, vRight.scale(-1), level-1);
         }
         return cDownLeft.add(cDownRight).add(cUpLeft).add(cUpRight).reduce(4);
     }
@@ -205,6 +269,7 @@ public class Camera {
      * create the image- write the color of every pixel in of the view plane and save it.
      */
     public void renderImage() {
+        //check that all the fields hava a value.
         if (location == null || vTo == null || vUp == null || vRight == null ||
                 height == 0 || width == 0 || distance == 0 ||
                 imageWriter == null || rayTracer == null) {
@@ -212,16 +277,17 @@ public class Camera {
         }
         int Nx = imageWriter.getNx(), Ny = imageWriter.getNy();
         Color color;
+        //go over the pixels and find the color of each pixel.
         for (int i = 0; i < Ny; i++) {
             for (int j = 0; j < Nx; j++) {
-                if (antiAliasingNumRays == 1) {
+                if (antiAliasingNumRays == 1) { //if the improvement "anti aliasing" is off- call the appropriate function.
                     Ray ray = constructRay(Nx, Ny, j, i);
                     color = castRay(ray);
                 }
-                else if(adaptiveSuperSampling){
-                     color = pixelColorAdaptiveSuperSampling(Nx, Ny, j, i);
+                else if(adaptiveSuperSampling){ //if the improvement "adaptive super sampling" is on- call the appropriate function
+                     color = pixelColorASS(Nx, Ny, j, i);
                 }
-                else {
+                else { //if the improvement "anti aliasing" is on (and not adaptive)- call the appropriate function for getting the rays and calculate the average of the colors.
                     List<Ray> rays = constructRaySuperSampling(Nx, Ny, j, i);
                     color = Color.BLACK;
                     for (Ray ray :
