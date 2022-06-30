@@ -104,10 +104,10 @@ public class ReflectionRefractionTests {
 
 		scene.lights.add(new SpotLight(new Color(700, 400, 400), new Point(60, 50, 0), new Vector(0, 0, -1)) //
 				.setKl(4E-5).setKq(2E-7));
-		camera.antiAliasingOn(9, false);
+		camera.antiAliasingOn(9, true);
 		//scene.softShadowOn(1, 0.1);
 		//ImageWriter imageWriter = new ImageWriter("refractionShadowSoftShadow", 600, 600);
-		ImageWriter imageWriter = new ImageWriter("refractionShadowAntiAliasing", 600, 600);
+		ImageWriter imageWriter = new ImageWriter("refractionShadowAdaptive64", 600, 600);
 		//ImageWriter imageWriter = new ImageWriter("refractionShadowWithTriangle", 600, 600);
 		camera.setImageWriter(imageWriter) //
 				.setRayTracer(new RayTracerBasic(scene)) //

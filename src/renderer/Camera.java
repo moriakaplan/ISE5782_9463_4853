@@ -141,7 +141,7 @@ public class Camera {
                 castRay(new Ray(this.location, Pij.add(vUp.scale(pixelHeight)).subtract(this.location))),
                 castRay(new Ray(this.location, Pij.add(vUp.scale(pixelHeight)).add(vRight.scale(pixelWidth)).subtract(this.location))),
                 castRay(new Ray(this.location, Pij.add(vRight.scale(pixelWidth)).subtract(this.location))));
-        return recursiveConstructRay(Pij, colors, pixelHeight, pixelWidth, vUp, vRight, (int)Math.log(antiAliasingNumRays-1));//***
+        return recursiveConstructRay(Pij, colors, pixelHeight, pixelWidth, vUp, vRight, 5);//(int)Math.log(antiAliasingNumRays-1));//***
     }
 
     /**
