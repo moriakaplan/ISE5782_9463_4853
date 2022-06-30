@@ -94,12 +94,21 @@ public class ReflectionRefractionTests {
 				new Triangle(new Point(-150, -150, -115), new Point(-70, 70, -140), new Point(75, 75, -150)) //
 						.setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(60)), //
 				new Sphere(new Point(60, 50, -50), 30d).setEmission(new Color(BLUE)) //
-						.setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(0.6)));
+						.setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(0.6))/*,
+				new Sphere(new Point(60, 50, 0), 3d).setEmission(new Color(RED)) //
+						.setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(0.7)),
+				new Triangle(new Point(50, 50, 0), new Point(80, 40, -30),new Point(60,40,-10))
+						.setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(0.3)).setEmission(new Color(GREEN)),
+				new Triangle(new Point(45, 45, -5), new Point(95, 35, -35),new Point(60,35,-15))
+						.setMaterial(new Material().setKd(0.2).setKs(0.2).setShininess(30).setKt(0.3)).setEmission(new Color(YELLOW))*/);
 
 		scene.lights.add(new SpotLight(new Color(700, 400, 400), new Point(60, 50, 0), new Vector(0, 0, -1)) //
 				.setKl(4E-5).setKq(2E-7));
-		camera.antiAliasingOn(9, true);
-		ImageWriter imageWriter = new ImageWriter("refractionShadowAdaptiveSuperSampling", 600, 600);
+		camera.antiAliasingOn(9, false);
+		//scene.softShadowOn(1, 0.1);
+		//ImageWriter imageWriter = new ImageWriter("refractionShadowSoftShadow", 600, 600);
+		ImageWriter imageWriter = new ImageWriter("refractionShadowAntiAliasing", 600, 600);
+		//ImageWriter imageWriter = new ImageWriter("refractionShadowWithTriangle", 600, 600);
 		camera.setImageWriter(imageWriter) //
 				.setRayTracer(new RayTracerBasic(scene)) //
 				.renderImage(); //

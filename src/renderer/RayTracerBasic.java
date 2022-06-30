@@ -101,10 +101,10 @@ public class RayTracerBasic extends RayTracerBase {
         Vector directedNormal = nv < 0 ? n : n.scale(-1);
         List<Ray> shadowRays= light.shadowRays(gP.point, directedNormal, scene.softShadowTargetSize, scene.softShadowNumRays);
         //List<Ray> shadowRays = List.of(new Ray(gP.point, lightDirection, directedNormal));
-        Double3 averageKtr=new Double3(0);
+        Double3 averageKtr=new Double3(0d);
         for (Ray ray: shadowRays) {
             List<GeoPoint> intersections = scene.geometries.findGeoIntersections(ray, light.getDistance(gP.point));
-            Double3 ktr = new Double3(1);
+            Double3 ktr = new Double3(1d);
             if (intersections != null) { //return ktr if there are no intersections in the way.
                 for (GeoPoint p : intersections) {
                     ktr = ktr.product(p.geometry.getMaterial().kT);
