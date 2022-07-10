@@ -244,8 +244,8 @@ public class FinalTest {
     @Test
     public void BallsPool() {
         Color wallE = new Color(GRAY);
-        Color red = new Color(200, 10, 10);
-        Color blue = new Color(10, 10, 200);
+        Color yellowLight = new Color(250, 250, 10);
+        Color blue = new Color(10, 10, 300);
         Color yellow = new Color(180, 180, 0);
 
         Material wallM = new Material().setKd(0.5).setKs(0.5).setShininess(5);
@@ -257,7 +257,7 @@ public class FinalTest {
         Scene scene = new Scene("pool");
         Camera camera = new Camera(new Point(0, -200, 50), new Vector(0, 10, -1), new Vector(0, 1, 10)) //
                 .setVPSize(250, 250).setVPDistance(200);//.multiThreadingOn();
-        Camera cameraUp = new Camera(new Point(0, -120, 90), new Vector(0, 10, -9), new Vector(0, 9, 10)) //
+        Camera cameraUp = new Camera(new Point(0, -100, 90), new Vector(0, 10, -8), new Vector(0, 8, 10)) //
                 .setVPSize(300, 300).setVPDistance(170);//.multiThreadingOn();
         scene.geometries.add(new Plane(new Point(0, 100, 0), new Vector(0, -1, 0)).setEmission(wallE).setMaterial(wallM));
         scene.geometries.add(new Plane(new Point(100, 0, 0), new Vector(-1, 0, 0)).setEmission(wallE).setMaterial(wallM));
@@ -278,18 +278,20 @@ public class FinalTest {
         scene.geometries.add(new Sphere(lightPlace.subtract(new Vector(0, 0, 4)), 10).setEmission(new Color(50, 50, 35)).setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50).setKt(0.9)));
 
 
-        scene.lights.add(new SpotLight(new Color(RED), new Point(50, 99, 99), new Vector(50, -99, -100)).setNarrowBeam(5).setKl(0.0001).setKq(0.00001));
-        scene.lights.add(new SpotLight(new Color(GREEN), new Point(-50, 99, 99), new Vector(-50, -99, -100)).setNarrowBeam(5).setKl(0.0001).setKq(0.00001));
+        scene.lights.add(new SpotLight(new Color(RED), new Point(50, 99, 99), new Vector(50, -50, -100)).setNarrowBeam(5).setKl(0.0001).setKq(0.00001));
+        scene.lights.add(new SpotLight(new Color(GREEN), new Point(-50, 99, 99), new Vector(-50, -50, -100)).setNarrowBeam(5).setKl(0.0001).setKq(0.00001));
+        scene.lights.add(new SpotLight(blue, new Point(50, -50, 99), new Vector(50, 99, -100)).setNarrowBeam(5).setKl(0.0001).setKq(0.00001));
+        scene.lights.add(new SpotLight(yellowLight, new Point(-50, -50, 99), new Vector(-50, 99, -100)).setNarrowBeam(5).setKl(0.0001).setKq(0.00001));
         scene.lights.add(new PointLight(new Color(40, 40, 20), lightPlace));
         scene.lights.add(new PointLight(new Color(70, 70, 70), new Point(0, -200, 50)));
         //scene.softShadowOn(7, 3);
-        camera.setImageWriter(new ImageWriter("ballsPool", 500, 500)) //
-                .setRayTracer(new RayTracerBasic(scene)) //
-                .renderImage(); //
+        camera.setImageWriter(new ImageWriter("ballsPool", 500, 500))
+                .setRayTracer(new RayTracerBasic(scene))
+                .renderImage();
         camera.writeToImage();
-        cameraUp.setImageWriter(new ImageWriter("ballsPoolUp", 400, 400)) //
-                .setRayTracer(new RayTracerBasic(scene)) //
-                .renderImage(); //
+        cameraUp.setImageWriter(new ImageWriter("ballsPoolUp", 400, 400))
+                .setRayTracer(new RayTracerBasic(scene))
+                .renderImage();
         cameraUp.writeToImage();
     }
 
