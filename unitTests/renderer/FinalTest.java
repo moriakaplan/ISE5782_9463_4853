@@ -257,8 +257,8 @@ public class FinalTest {
         Scene scene = new Scene("pool");
         Camera camera = new Camera(new Point(0, -200, 50), new Vector(0, 10, -1), new Vector(0, 1, 10)) //
                 .setVPSize(250, 250).setVPDistance(200);//.multiThreadingOn();
-        Camera cameraUp = new Camera(new Point(0, -100, 99), new Vector(0, 10, -9), new Vector(0, 9, 10)) //
-                .setVPSize(280, 280).setVPDistance(170);//.multiThreadingOn();
+        Camera cameraUp = new Camera(new Point(0, -120, 90), new Vector(0, 10, -9), new Vector(0, 9, 10)) //
+                .setVPSize(300, 300).setVPDistance(170);//.multiThreadingOn();
         scene.geometries.add(new Plane(new Point(0, 100, 0), new Vector(0, -1, 0)).setEmission(wallE).setMaterial(wallM));
         scene.geometries.add(new Plane(new Point(100, 0, 0), new Vector(-1, 0, 0)).setEmission(wallE).setMaterial(wallM));
         scene.geometries.add(new Plane(new Point(-100, 0, 0), new Vector(1, 0, 0)).setEmission(wallE).setMaterial(wallM));
