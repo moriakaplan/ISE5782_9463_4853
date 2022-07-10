@@ -31,8 +31,7 @@ public class FinalTest {
         BallsPool(Point _center, Material m) {
             super();
             center = _center;
-            Point b1 = center.add(new Vector(-50, -50, 0)),
-                    b2 = center.add(new Vector(50, -50, 0)), b3 = center.add(new Vector(50, 50, 0)), b4 = center.add(new Vector(-50, 50, 0));
+            Point b1 = center.add(new Vector(-50, -50, 0)), b2 = center.add(new Vector(50, -50, 0)), b3 = center.add(new Vector(50, 50, 0)), b4 = center.add(new Vector(-50, 50, 0));
             Point u1 = center.add(new Vector(-50, -50, 20)), u2 = center.add(new Vector(50, -50, 20)), u3 = center.add(new Vector(50, 50, 20)), u4 = center.add(new Vector(-50, 50, 20));
             Point bi1 = center.add(new Vector(-40, -40, 2)), bi2 = center.add(new Vector(40, -40, 2)), bi3 = center.add(new Vector(40, 40, 2)), bi4 = center.add(new Vector(-40, 40, 2));
             Point ui1 = center.add(new Vector(-40, -40, 20)), ui2 = center.add(new Vector(40, -40, 20)), ui3 = center.add(new Vector(40, 40, 20)), ui4 = center.add(new Vector(-40, 40, 20));
@@ -206,10 +205,6 @@ public class FinalTest {
             Color c;
             for (int i = 0; i < areaSize1 / size1; i++) {
                 for (int j = 0; j < areaSize2 / size2; j++) {
-                    //if((i-j)%2==0)
-                    //    c=new Color (BLUE);
-                    //else
-                    //    c=new Color (RED);
                     rCenter = start.add(v1.scale(1 + 2*i)).add(v2.scale(1+2*j)); //the center of the current rhombus.
                     super.add(new Rec(rCenter.subtract(v1), rCenter.subtract(v2), rCenter.add(v1),rCenter.add(v2), color, material));
                 }
