@@ -65,6 +65,14 @@ public class Tube extends Geometry{
         else center = p0.add(v.scale(t));
         return p.subtract(center).normalize();
     }
+
+    /**
+     * create boundary box for the tube
+     */
+    @Override
+    public void createBoundingBox() {
+        box = null;
+    }
     @Override
     public List<Point> findIntersections(Ray ray) {
         return null;

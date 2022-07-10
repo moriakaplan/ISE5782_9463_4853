@@ -17,6 +17,7 @@ public class Geometries extends Intersectable {
      */
     public Geometries() {
         shapes = new LinkedList<Intersectable>();
+
     }
 
     /**
@@ -27,6 +28,8 @@ public class Geometries extends Intersectable {
     public Geometries(Intersectable... geometries) {
         shapes = new LinkedList<Intersectable>();
         add(geometries);
+        if (bvh)
+            createBoundingBox();
     }
 
     /**
@@ -39,7 +42,34 @@ public class Geometries extends Intersectable {
                 geometries) {
             shapes.add(g);
         }
-        //shapes.addAll(geometries);
+        if (bvh)
+            createBoundingBox();
+    }
+
+    /**
+     * creates a bounding box for the geometries
+     */
+    @Override
+    public void createBoundingBox() {
+        if (shapes == null)
+            return;
+        double minX = Double.POSITIVE_INFINITY;
+        double minY = Double.POSITIVE_INFINITY;
+        double minZ = Double.POSITIVE_INFINITY;
+        double maxX = Double.NEGATIVE_INFINITY;
+        double maxY = Double.NEGATIVE_INFINITY;
+        double maxZ = Double.NEGATIVE_INFINITY;
+        for (Intersectable geo : shapes) {
+            if (geo.box != null) {
+                minX = Math.min(minX, geo.box.min.getX());
+                minY = Math.min(minY, geo.box.min.getY());
+                minZ = Math.min(minZ, geo.box.min.getZ());
+                maxX = Math.max(maxX, geo.box.max.getX());
+                maxY = Math.max(maxY, geo.box.max.getY());
+                maxZ = Math.max(maxZ, geo.box.max.getZ());
+            }
+        }
+        box = new BoundingBox(new Point(minX, minY, minZ), new Point(maxX, maxY, maxZ));
     }
 
     @Override

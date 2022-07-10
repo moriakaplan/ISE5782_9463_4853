@@ -93,4 +93,12 @@ public class Plane extends Geometry {
         return List.of(new GeoPoint(this, ray.getPoint(t))); // p = p0+t*v
     }
 
+    /**
+     * create boundary box for the plane
+     */
+    @Override
+    public void createBoundingBox() {
+        box = null;
+    }
+
 }
