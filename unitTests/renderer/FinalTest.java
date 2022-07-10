@@ -306,7 +306,7 @@ public class FinalTest {
 
         Scene scene = new Scene("pool");
         Camera camera = new Camera(new Point(0, -200, 50), new Vector(0, 10, -1), new Vector(0, 1, 10)) //
-                .setVPSize(500, 500).setVPDistance(200).antiAliasingOn(5, true);//.multiThreadingOn();
+                .setVPSize(250, 250).setVPDistance(200).antiAliasingOn(5, true);//.multiThreadingOn();
         Camera cameraUp = new Camera(new Point(0, -100, 90), new Vector(0, 10, -8), new Vector(0, 8, 10)) //
                 .setVPSize(300, 300).setVPDistance(170);//.multiThreadingOn();
 
