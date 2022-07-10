@@ -26,9 +26,19 @@ public class FinalTest {
         }
     }
 
+    /**
+     * class for pool of balls
+     */
     class BallsPool extends Geometries {
         Point center;
-        BallsPool(Point _center, Material m) {
+
+        /**
+         * constructor for building balls pool.
+         * @param _center center of the pool
+         * @param m material of the pool
+         * @param mBlue material of the blue side.
+         */
+        BallsPool(Point _center, Material m, Material mBlue) {
             super();
             center = _center;
             Point b1 = center.add(new Vector(-50, -50, 0)), b2 = center.add(new Vector(50, -50, 0)), b3 = center.add(new Vector(50, 50, 0)), b4 = center.add(new Vector(-50, 50, 0));
@@ -38,11 +48,11 @@ public class FinalTest {
             Color red = new Color(200, 10, 10);
             Color blue = new Color(10, 10, 200);
             Color yellow = new Color(180, 180, 0);
-            super.add(new Rec(b1, b2, b3, b4, blue, m),
-                    new Rec(b1, b2, u2, u1, blue, m),
-                    new Rec(b3, b2, u2, u3, blue, m),
-                    new Rec(b3, b4, u4, u3, blue, m),
-                    new Rec(b1, b4, u4, u1, blue, m),
+            super.add(new Rec(b1, b2, b3, b4, blue, mBlue),
+                    new Rec(b1, b2, u2, u1, blue, mBlue),
+                    new Rec(b3, b2, u2, u3, blue, mBlue),
+                    new Rec(b3, b4, u4, u3, blue, mBlue),
+                    new Rec(b1, b4, u4, u1, blue, mBlue),
                     new Rec(bi1, bi2, bi3, bi4, new Color(ORANGE), m),
                     new Rec(u1, u2, ui2, ui1, yellow, m),
                     new Rec(u3, u2, ui2, ui3, yellow, m),
@@ -66,8 +76,18 @@ public class FinalTest {
         }
     }
 
+    /**
+     * class for slide
+     */
     class Slide extends Geometries {
         Point center;
+
+        /**
+         * constructor for build slide.
+         * @param _center the center of the slide
+         * @param material the material o the slide
+         * @param railM the material of the rail of the slide
+         */
         Slide(Point _center, Material material, Material railM) {
             super();
             center = _center;
@@ -168,8 +188,22 @@ public class FinalTest {
         }
     }
 
+    /**
+     * class for grid of balls
+     */
     class BallsGrid extends Geometries {
         Point start;
+
+        /**
+         * constructor for building grid of balls
+         * @param _start the corner that we start from
+         * @param v1 vector of the first direction of the grid
+         * @param v2 vector of the second direction of the grid
+         * @param size1 amount of balls in the first direction of the grid
+         * @param size2 amount of balls in the second direction of the grid
+         * @param radius radius of the balls
+         * @param material material of the balls
+         */
         BallsGrid(Point _start, Vector v1, Vector v2, int size1, int size2, double radius, Material material) {
             start = _start;
             v1.normalize();
@@ -184,19 +218,35 @@ public class FinalTest {
         }
         @Override
         public void createBoundingBox() {
-            double minX = start.getX() - 40
-                    ,minY = start.getY() - 10
-                    ,minZ = start.getZ()
-                    ,maxX = start.getX() + 40
-                    ,maxY = start.getY() + 10
-                    ,maxZ = start.getZ() + 50;
+            double minX =  - 40
+                    ,minY = -40
+                    ,minZ = start.getZ()-4
+                    ,maxX = 40
+                    ,maxY = 40
+                    ,maxZ = start.getZ() +4;
             box = new BoundingBox(new Point(minX, minY, minZ), new Point(maxX, maxY, maxZ));
         }
 
     }
 
+    /**
+     * class for grid of Rhombuses
+     */
     class RhombusesGrid extends Geometries {
         Point start;
+
+        /**
+         * constructor for building grid of rhombuses
+         * @param _start the corner that we start from
+         * @param v1 vector of the first direction of the grid
+         * @param v2 vector of the second direction of the grid
+         * @param size1 size of the rhombus
+         * @param size2 size of the rhombus
+          * @param areaSize1 size of the area
+         * @param areaSize2 size of the area
+         * @param color color of the rhombuses
+         * @param material material of the balls
+         */
         RhombusesGrid(Point _start, Vector v1, Vector v2, int size1, int size2, int areaSize1, int areaSize2,  Color color, Material material) {
             start = _start;
             v1=v1.normalize().scale(size1/2);
@@ -212,18 +262,22 @@ public class FinalTest {
         }
         @Override
         public void createBoundingBox() {
-            double minX = start.getX() - 40
-                    ,minY = start.getY() - 10
-                    ,minZ = start.getZ()
-                    ,maxX = start.getX() + 40
-                    ,maxY = start.getY() + 10
-                    ,maxZ = start.getZ() + 50;
+            double minX = -Math.abs(start.getX())
+                    ,minY = -Math.abs(start.getY())
+                    ,minZ = 0
+                    ,maxX = Math.abs(start.getX())
+                    ,maxY = Math.abs(start.getY())
+                    ,maxZ = 100;
             box = new BoundingBox(new Point(minX, minY, minZ), new Point(maxX, maxY, maxZ));
 
         }
     }
 
 
+    /**
+     * random color for ball
+     * @return color
+     */
     Color randColor() {
         List<Color> colors = new LinkedList<Color>();
         colors.add(new Color(200, 200, 0));
@@ -238,41 +292,76 @@ public class FinalTest {
 
     @Test
     public void BallsPool() {
-        Color wallE = new Color(GRAY);
+        //colors
+        Color wallE = new Color(70,70,70);
         Color yellowLight = new Color(250, 250, 10);
         Color blue = new Color(10, 10, 300);
         Color yellow = new Color(180, 180, 0);
 
+        //materials
         Material wallM = new Material().setKd(0.5).setKs(0.5).setShininess(5);
         Material poolM = new Material().setKd(0.7).setKs(0.8).setShininess(150);
+        Material blueM = new Material().setKd(0.7).setKs(0.8).setShininess(150).setKr(0.5);
         Material railM = new Material().setKd(0.7).setKs(0.8).setShininess(50).setKt(0.75);
-
-        Point lightPlace = new Point(0, 0, 96);
 
         Scene scene = new Scene("pool");
         Camera camera = new Camera(new Point(0, -200, 50), new Vector(0, 10, -1), new Vector(0, 1, 10)) //
-                .setVPSize(250, 250).setVPDistance(200);//.multiThreadingOn();
+                .setVPSize(500, 500).setVPDistance(200).antiAliasingOn(5, true);//.multiThreadingOn();
         Camera cameraUp = new Camera(new Point(0, -100, 90), new Vector(0, 10, -8), new Vector(0, 8, 10)) //
                 .setVPSize(300, 300).setVPDistance(170);//.multiThreadingOn();
+
+        //walls
         scene.geometries.add(new Plane(new Point(0, 100, 0), new Vector(0, -1, 0)).setEmission(wallE).setMaterial(wallM));
         scene.geometries.add(new Plane(new Point(100, 0, 0), new Vector(-1, 0, 0)).setEmission(wallE).setMaterial(wallM));
         scene.geometries.add(new Plane(new Point(-100, 0, 0), new Vector(1, 0, 0)).setEmission(wallE).setMaterial(wallM));
         scene.geometries.add(new Plane(new Point(0, 0, 0), new Vector(0, 0, 1)).setEmission(new Color(50, 50, 50)).setMaterial(wallM));
-        scene.geometries.add(new Plane(new Point(0, 0, 100), new Vector(0, 0, -1)).setEmission(new Color(180, 180, 180)).setMaterial(wallM));
-        //scene.geometries.add(new RhombusesGrid(new Point(-99.9,99.9,99.9), new Vector(1,0,0), new Vector(0,0,-1), 10, 20, 200, 200, new Color(50, 50, 50), new Material().setKr(0.9).setShininess(10).setKs(0.5).setKd(0.5)));
+        scene.geometries.add(new Plane(new Point(0, 0, 100), new Vector(0, 0, -1)).setEmission(wallE).setMaterial(wallM));
+
+        //rhombuses on the walls
+        scene.geometries.add(new RhombusesGrid(new Point(-99.9,99.9,99.9), new Vector(1,0,0), new Vector(0,0,-1), 10, 20, 200, 200,
+                new Color(50, 50, 50), new Material().setShininess(10).setKs(0.5).setKd(0.5)));
+        scene.geometries.add(new RhombusesGrid(new Point(99.9,99.9,99.9), new Vector(0,-1,0), new Vector(0,0,-1), 10, 20, 300, 200, new Color(50, 50, 50),
+                new Material().setShininess(10).setKs(0.5).setKd(0.5)));
+        scene.geometries.add(new RhombusesGrid(new Point(-99.9,99.9,99.9), new Vector(0,-1,0), new Vector(0,0,-1), 10, 20, 300, 200,
+                new Color(50, 50, 50), new Material().setShininess(10).setKs(0.5).setKd(0.5)));
         //scene.geometries.add(new Floor(new Point(-100, 100, 0.1), new Vector(1,0,0), new Vector(0,-1,0), 20, 200, 200, wallE, wallM));
 
+        //balls
         //scene.geometries.add(new BallsPool(new Point(0,0,0), poolM));
-        //scene.geometries.add(new BallsGrid(new Point(28, 28, 3), new Vector(-1, 0, 0), new Vector(0, -1, 0), 11, 11, 2.5, poolM));
-        //scene.geometries.add(new BallsGrid(new Point(25.5, 25.5, 6.25), new Vector(-1, 0, 0), new Vector(0, -1, 0), 10, 10, 2.5, poolM));
-        //scene.geometries.add(new BallsGrid(new Point(0, 23, 10.5), new Vector(-1, 0, 0), new Vector(0, -1, 0), 5, 8, 2.5, poolM));
+        scene.geometries.add(new BallsGrid(new Point(-50, -40, 4), new Vector(1, 0, 0), new Vector(0, 1, 0), 6, 10, 4, poolM));
+        scene.geometries.add(new BallsGrid(new Point(30, 40, 4), new Vector(-1, 0, 0), new Vector(0, -1, 0), 4, 3, 4, poolM));
+        scene.geometries.add(new BallsGrid(new Point(30, -40, 4), new Vector(-1, 0, 0), new Vector(0, 1, 0), 4, 3, 4, poolM));
+        scene.geometries.add(new BallsGrid(new Point(-46, -36, 10), new Vector(1, 0, 0), new Vector(0, 1, 0), 5, 9, 4, poolM));
+        scene.geometries.add(new BallsGrid(new Point(26, 36, 10), new Vector(-1, 0, 0), new Vector(0, -1, 0), 4, 2, 4, poolM));
+        scene.geometries.add(new BallsGrid(new Point(26, -36, 10), new Vector(-1, 0, 0), new Vector(0, 1, 0), 4, 2, 4, poolM));
+        scene.geometries.add(new Sphere(new Point(-38, -28, 16), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(-22, -4, 16), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(30, 12, 16), 4).setEmission(randColor()).setMaterial(poolM));
 
-        scene.geometries.add(new BallsPool(new Point(-10, 0, 0), poolM));
+        scene.geometries.add(new Sphere(new Point(60, -40, 4), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(70, -50, 4), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(65, -30, 4), 4).setEmission(randColor()).setMaterial(poolM));
+
+        scene.geometries.add(new Sphere(new Point(0, -60, 4), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(20, -65, 4), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(25, -75, 4), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(-20, -85, 4), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(15, -85, 4), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(10, -70, 4), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(-10, -80, 4), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(5, -90, 4), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(10, -100, 4), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(-10, -110, 4), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(5, -120, 4), 4).setEmission(randColor()).setMaterial(poolM));
+        scene.geometries.add(new Sphere(new Point(30, -12, 4), 4).setEmission(randColor()).setMaterial(poolM));
+
+        Point lightPlace = new Point(0, 0, 96);
+        scene.geometries.add(new BallsPool(new Point(-10, 0, 0), poolM, blueM));
         scene.geometries.add(new Slide(new Point(40, 0, 0), poolM, railM));
         scene.geometries.add(new Sphere(lightPlace, 4).setEmission(yellow).setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50).setKt(0.85)));
         scene.geometries.add(new Sphere(lightPlace.subtract(new Vector(0, 0, 4)), 10).setEmission(new Color(50, 50, 35)).setMaterial(new Material().setKd(0.5).setKs(0.5).setShininess(50).setKt(0.9)));
 
-
+        //lights
         scene.lights.add(new SpotLight(new Color(RED), new Point(50, 99, 99), new Vector(50, -50, -100)).setNarrowBeam(5).setKl(0.0001).setKq(0.00001));
         scene.lights.add(new SpotLight(new Color(GREEN), new Point(-50, 99, 99), new Vector(-50, -50, -100)).setNarrowBeam(5).setKl(0.0001).setKq(0.00001));
         scene.lights.add(new SpotLight(blue, new Point(50, -50, 99), new Vector(50, 99, -100)).setNarrowBeam(5).setKl(0.0001).setKq(0.00001));
@@ -280,14 +369,16 @@ public class FinalTest {
         scene.lights.add(new PointLight(new Color(40, 40, 20), lightPlace));
         scene.lights.add(new PointLight(new Color(70, 70, 70), new Point(0, -200, 50)));
         //scene.softShadowOn(7, 3);
-        camera.setImageWriter(new ImageWriter("ballsPool", 500, 500))
+
+        //render images
+        camera.setImageWriter(new ImageWriter("ballsPool3", 500, 500))
                 .setRayTracer(new RayTracerBasic(scene))
                 .renderImage();
         camera.writeToImage();
-        cameraUp.setImageWriter(new ImageWriter("ballsPoolUp", 400, 400))
-                .setRayTracer(new RayTracerBasic(scene))
-                .renderImage();
-        cameraUp.writeToImage();
+        //cameraUp.setImageWriter(new ImageWriter("ballsPoolUp", 400, 400))
+        //        .setRayTracer(new RayTracerBasic(scene))
+        //        .renderImage();
+        //cameraUp.writeToImage();
     }
 
 }
