@@ -62,9 +62,8 @@ public class PointLight extends Light implements LightSource {
     public List<Ray> shadowRays(Point p, Vector directedN, double targetSize, int nRays) {
         List<Ray> result = new LinkedList<Ray>();
         Vector l=getL(p);
-        //Plane target=light.getTargetArea(p);
-        //Plane target=new Plane(position, l);
-        Vector vec = l.add(new Vector(0, 0, l.getZ())); //help vector for calculating the vectors in the target plane (just must be different from l and (0,0,0)
+        //help vector for calculating the vectors in the target plane (just must be different from l and (0,0,0)
+        Vector vec = l.add(new Vector(0, 0, l.getZ()));
         Vector v1 = l.crossProduct(vec).normalize();  //vector in the target plane (orthogonal to l).
         Vector v2 = l.crossProduct(v1).normalize();   //vector in the target plane (orthogonal to l and v1).
         Point corner = position.subtract(v1.scale(targetSize / 2))  //the corner of the target area.

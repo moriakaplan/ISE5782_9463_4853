@@ -23,9 +23,10 @@ public class Camera {
     private double distance;
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
-    //private boolean superSampling = false;
     private int antiAliasingNumRays = 1;
     private boolean adaptiveSuperSampling= false;
+    private boolean multiThreading= false;
+    private int threadsCount = 3;
 
 
     /**
@@ -65,8 +66,27 @@ public class Camera {
      *
      * @return
      */
-    public Camera AntiAliasingOff() {
+    public Camera antiAliasingOff() {
         this.antiAliasingNumRays = 1;
+        return this;
+    }
+
+    /**
+     *  start the multi threading improvement.
+     * @return the camera object.
+     */
+    public Camera multiThreadingOn() {
+        this.multiThreading=true;
+        return this;
+    }
+
+    /**
+     * stop the multi threading improvement.
+     *
+     * @return the camera object.
+     */
+    public Camera multiThreadingOff() {
+        this.multiThreading = false;
         return this;
     }
 
@@ -92,8 +112,9 @@ public class Camera {
         //pixel[i,j] center
         Point Pij = Pc;
         Point point;
-        double Yi = -(0.5 + i - (nY - 1) / 2d) * pixelHeight + 0.5 * cellHeight; //how to move from the center of the view plane.
-        double Xj = (-0.5 + j - (nX - 1) / 2d) * pixelWidth + 0.5 * cellWidth; /***/
+        //how to move from the center of the view plane.
+        double Yi = -(0.5 + i - (nY - 1) / 2d) * pixelHeight + 0.5 * cellHeight;
+        double Xj = (-0.5 + j - (nX - 1) / 2d) * pixelWidth + 0.5 * cellWidth;
         if (Xj != 0)
             Pij = Pij.add(vRight.scale(Xj));
         if (Yi != 0)
@@ -183,7 +204,7 @@ public class Camera {
                 .reduce(4);
     }
 
-    public Color recursiveConstructRay(Point corner, double height, double width, Vector vUp, Vector vRight, int level) {
+    /*public Color recursiveConstructRay(Point corner, double height, double width, Vector vUp, Vector vRight, int level) {
         Point pUpLeft = corner.add(vUp.scale(height));
         Point pDownRight = corner.add(vRight.scale(width));
         Point pUpRight = corner.add(vUp.scale(height)).add(vRight.scale(width));
@@ -226,6 +247,8 @@ public class Camera {
         }
         return cDownLeft.add(cDownRight).add(cUpLeft).add(cUpRight).reduce(4);
     }
+     */
+
 
     /**
      * find the ray that go through the specific pixel in the view plane.
@@ -274,21 +297,31 @@ public class Camera {
         if (location == null || vTo == null || vUp == null || vRight == null ||
                 height == 0 || width == 0 || distance == 0 ||
                 imageWriter == null || rayTracer == null) {
-            throw new MissingResourceException("can't render image because one of the fields of the camera is null", "", "");
+            throw new MissingResourceException
+                    ("can't render image because one of the fields of the camera is null", "", "");
+        }
+        //call the appropriate function if it with multi threading.
+        if(multiThreading){
+            renderImageMultiThreading();
+            return;
         }
         int Nx = imageWriter.getNx(), Ny = imageWriter.getNy();
         Color color;
         //go over the pixels and find the color of each pixel.
         for (int i = 0; i < Ny; i++) {
             for (int j = 0; j < Nx; j++) {
-                if (antiAliasingNumRays == 1) { //if the improvement "anti aliasing" is off- call the appropriate function.
+                //if the improvement "anti aliasing" is off- call the appropriate function.
+                if (antiAliasingNumRays == 1) {
                     Ray ray = constructRay(Nx, Ny, j, i);
                     color = castRay(ray);
                 }
-                else if(adaptiveSuperSampling){ //if the improvement "adaptive super sampling" is on- call the appropriate function
+                //if the improvement "adaptive super sampling" is on- call the appropriate function
+                else if(adaptiveSuperSampling){
                      color = pixelColorASS(Nx, Ny, j, i);
                 }
-                else { //if the improvement "anti aliasing" is on (and not adaptive)- call the appropriate function for getting the rays and calculate the average of the colors.
+                // if the improvement "anti aliasing" is on (and not adaptive)-
+                // call the appropriate function for getting the rays and calculate the average of the colors.
+                else {
                     List<Ray> rays = constructRaySuperSampling(Nx, Ny, j, i);
                     color = Color.BLACK;
                     for (Ray ray :
@@ -302,6 +335,37 @@ public class Camera {
         }
     }
 
+    public void renderImageMultiThreading(){
+        int printInterval=60;
+        int Nx=imageWriter.getNx(), Ny=imageWriter.getNy();
+        Pixel.initialize(Ny, Nx, printInterval);
+        while (threadsCount-- > 0) {
+            new Thread(() -> {
+                for (Pixel pixel = new Pixel(); pixel.nextPixel(); Pixel.pixelDone()) {
+                    Color color;
+                    if (antiAliasingNumRays == 1) { //if the improvement "anti aliasing" is off- call the appropriate function.
+                        Ray ray = constructRay(Nx, Ny, pixel.col, pixel.row);
+                        color = castRay(ray);
+                    } else if (adaptiveSuperSampling) { //if the improvement "adaptive super sampling" is on- call the appropriate function
+                        color = pixelColorASS(Nx, Ny, pixel.col, pixel.row);
+                    } else { //if the improvement "anti aliasing" is on (and not adaptive)- call the appropriate function for getting the rays and calculate the average of the colors.
+                        List<Ray> rays = constructRaySuperSampling(Nx, Ny, pixel.col, pixel.row);
+                        color = Color.BLACK;
+                        for (Ray ray :
+                                rays) {
+                            color = color.add(castRay(ray));
+                        }
+                        color = color.reduce(rays.size());
+                    }
+                    imageWriter.writePixel(pixel.col, pixel.row, color);
+                    Pixel.pixelDone();
+                    Pixel.printPixel();
+                }
+                    //castRay(imageWriter.getNx(), imageWriter.getNy(), pixel.col, pixel.row);
+            }).start();
+        }
+        Pixel.waitToFinish();
+    }
     /**
      * create a grid on the image according to the interval.
      *

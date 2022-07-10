@@ -97,10 +97,8 @@ public class RayTracerBasic extends RayTracerBase {
      * @return true if its unshaded and false if its shaded.
      */
     private Double3 transparencySoftShadow(GeoPoint gP, LightSource light, Vector l, Vector n, double nv) {
-        //Vector lightDirection = l.scale(-1); // from point to light source
-        Vector directedNormal = nv < 0 ? n : n.scale(-1);
-        List<Ray> shadowRays= light.shadowRays(gP.point, directedNormal, scene.softShadowTargetSize, scene.softShadowNumRays);
-        //List<Ray> shadowRays = List.of(new Ray(gP.point, lightDirection, directedNormal));
+        Vector directedNormal = nv < 0 ? n : n.scale(-1); //normal to the direction of the camera.
+        List<Ray> shadowRays = light.shadowRays(gP.point, directedNormal, scene.softShadowTargetSize, scene.softShadowNumRays);
         Double3 averageKtr=new Double3(0d);
         for (Ray ray: shadowRays) {
             List<GeoPoint> intersections = scene.geometries.findGeoIntersections(ray, light.getDistance(gP.point));
@@ -200,7 +198,6 @@ public class RayTracerBasic extends RayTracerBase {
 
     /**
      * help function. calculate the local effects of the point (the basic color of it)
-     *
      * @param gP  point on geometry.
      * @param ray ray from the camera to the point.
      * @return the local color.
