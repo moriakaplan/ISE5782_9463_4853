@@ -27,9 +27,12 @@ public class FinalTest {
     }
 
     class BallsPool extends Geometries {
-        BallsPool(Point center, Material m) {
+        Point center;
+        BallsPool(Point _center, Material m) {
             super();
-            Point b1 = center.add(new Vector(-50, -50, 0)), b2 = center.add(new Vector(50, -50, 0)), b3 = center.add(new Vector(50, 50, 0)), b4 = center.add(new Vector(-50, 50, 0));
+            center = _center;
+            Point b1 = center.add(new Vector(-50, -50, 0)),
+                    b2 = center.add(new Vector(50, -50, 0)), b3 = center.add(new Vector(50, 50, 0)), b4 = center.add(new Vector(-50, 50, 0));
             Point u1 = center.add(new Vector(-50, -50, 20)), u2 = center.add(new Vector(50, -50, 20)), u3 = center.add(new Vector(50, 50, 20)), u4 = center.add(new Vector(-50, 50, 20));
             Point bi1 = center.add(new Vector(-40, -40, 2)), bi2 = center.add(new Vector(40, -40, 2)), bi3 = center.add(new Vector(40, 40, 2)), bi4 = center.add(new Vector(-40, 40, 2));
             Point ui1 = center.add(new Vector(-40, -40, 20)), ui2 = center.add(new Vector(40, -40, 20)), ui3 = center.add(new Vector(40, 40, 20)), ui4 = center.add(new Vector(-40, 40, 20));
@@ -50,24 +53,65 @@ public class FinalTest {
                     new Rec(ui3, ui2, bi2, bi3, red, m),
                     new Rec(ui3, ui4, bi4, bi3, red, m),
                     new Rec(ui1, ui4, bi4, bi1, red, m));
+        }
+        @Override
+        public void createBoundingBox() {
+            double minX = center.getX() - 50
+                    ,minY = center.getY() - 50
+                    ,minZ = center.getZ()
+                    ,maxX = center.getX() + 50
+                    ,maxY = center.getY() + 50
+                    ,maxZ = center.getZ() + 20;
+            box = new BoundingBox(new Point(minX, minY, minZ), new Point(maxX, maxY, maxZ));
 
         }
     }
 
     class Slide extends Geometries {
-        Slide(Point center, Material material, Material railM) {
+        Point center;
+        Slide(Point _center, Material material, Material railM) {
             super();
-            Point br1 = center.add(new Vector(40, -10, 0)), br2 = center.add(new Vector(40, 10, 0)), br3 = center.add(new Vector(30, 10, 0)), br4 = center.add(new Vector(30, -10, 0));
-            Point u1 = center.add(new Vector(0, -10, 40)), u2 = center.add(new Vector(0, 10, 40)), u3 = u2 //center.add(new Vector(-10,10,40))
-                    , u4 = u1; //center.add(new Vector(-10,-10,40));
-            Point b1 = center.add(new Vector(0, -10, 30)), b2 = center.add(new Vector(0, 10, 30)), b3 = b2 //center.add(new Vector(-10,10,30))
-                    , b4 = b1; //center.add(new Vector(-10,-10,30));
-            Point bl1 = center.add(new Vector(-30, -10, 0)), bl2 = center.add(new Vector(-30, 10, 0)), bl3 = center.add(new Vector(-40, 10, 0)), bl4 = center.add(new Vector(-40, -10, 0));
-            Point s11 = center.add(new Vector(40, -10, 10)), s12 = center.add(new Vector(40, 10, 10)), s21 = center.add(new Vector(30, -10, 20)), s22 = center.add(new Vector(30, 10, 20)), s31 = center.add(new Vector(20, -10, 30)), s32 = center.add(new Vector(20, 10, 30)), s41 = center.add(new Vector(10, -10, 40)), s42 = center.add(new Vector(10, 10, 40)), si1 = center.add(new Vector(30, -10, 10)), so1 = center.add(new Vector(30, 10, 10)), si2 = center.add(new Vector(20, -10, 20)), so2 = center.add(new Vector(20, 10, 20)), si3 = center.add(new Vector(10, -10, 30)), so3 = center.add(new Vector(10, 10, 30));
-            Point r1 = center.add(new Vector(10, -10, 50)), r2 = center.add(new Vector(10, 10, 50)), r3 = center.add(new Vector(-10, 10, 50)), r4 = center.add(new Vector(-10, -10, 50)), rr1 = center.add(new Vector(40, -10, 20)), rr2 = center.add(new Vector(40, 10, 20)), rl1 = center.add(new Vector(-40, -10, 20)), rl2 = center.add(new Vector(-40, 10, 20));
+            center = _center;
+            Point br1 = center.add(new Vector(40, -10, 0)),
+                    br2 = center.add(new Vector(40, 10, 0)),
+                    br3 = center.add(new Vector(30, 10, 0)),
+                    br4 = center.add(new Vector(30, -10, 0));
+            Point u1 = center.add(new Vector(0, -10, 40)),
+                    u2 = center.add(new Vector(0, 10, 40)),
+                    u3 = u2
+                    , u4 = u1;
+            Point b1 = center.add(new Vector(0, -10, 30)),
+                    b2 = center.add(new Vector(0, 10, 30)),
+                    b3 = b2
+                    , b4 = b1;
+            Point bl1 = center.add(new Vector(-30, -10, 0)),
+                    bl2 = center.add(new Vector(-30, 10, 0)),
+                    bl3 = center.add(new Vector(-40, 10, 0)),
+                    bl4 = center.add(new Vector(-40, -10, 0));
+            Point s11 = center.add(new Vector(40, -10, 10)),
+                    s12 = center.add(new Vector(40, 10, 10)),
+                    s21 = center.add(new Vector(30, -10, 20)),
+                    s22 = center.add(new Vector(30, 10, 20)),
+                    s31 = center.add(new Vector(20, -10, 30)),
+                    s32 = center.add(new Vector(20, 10, 30)),
+                    s41 = center.add(new Vector(10, -10, 40)),
+                    s42 = center.add(new Vector(10, 10, 40)),
+                    si1 = center.add(new Vector(30, -10, 10)),
+                    so1 = center.add(new Vector(30, 10, 10)),
+                    si2 = center.add(new Vector(20, -10, 20)),
+                    so2 = center.add(new Vector(20, 10, 20)),
+                    si3 = center.add(new Vector(10, -10, 30)),
+                    so3 = center.add(new Vector(10, 10, 30));
+            Point r1 = center.add(new Vector(10, -10, 50)),
+                    r2 = center.add(new Vector(10, 10, 50)),
+                    r3 = center.add(new Vector(-10, 10, 50)),
+                    r4 = center.add(new Vector(-10, -10, 50)),
+                    rr1 = center.add(new Vector(40, -10, 20)),
+                    rr2 = center.add(new Vector(40, 10, 20)),
+                    rl1 = center.add(new Vector(-40, -10, 20)),
+                    rl2 = center.add(new Vector(-40, 10, 20));
             Color green = new Color(10, 200, 10);
-            //Color blue = new Color(10, 10, 200);
-            Color blue = new Color(30, 30, 200);//new Color(180, 180, 0);
+            Color blue = new Color(30, 30, 200);
             super.add(new Rec(br1, br2, br3, br4, green, material)
                     , new Rec(br4, br3, b2, b1, green, material)
                     , new Rec(br4, br1, u1, b1, green, material)
@@ -111,10 +155,24 @@ public class FinalTest {
                     , new Triangle(r3, r2, b2).setEmission(blue).setMaterial(railM));
 
         }
+
+        @Override
+        public void createBoundingBox() {
+            double minX = center.getX() - 40
+                    ,minY = center.getY() - 10
+                    ,minZ = center.getZ()
+                    ,maxX = center.getX() + 40
+                    ,maxY = center.getY() + 10
+                    ,maxZ = center.getZ() + 50;
+            box = new BoundingBox(new Point(minX, minY, minZ), new Point(maxX, maxY, maxZ));
+
+        }
     }
 
     class BallsGrid extends Geometries {
-        BallsGrid(Point start, Vector v1, Vector v2, int size1, int size2, double radius, Material material) {
+        Point start;
+        BallsGrid(Point _start, Vector v1, Vector v2, int size1, int size2, double radius, Material material) {
+            start = _start;
             v1.normalize();
             v2.normalize();
             Point center;
@@ -125,10 +183,23 @@ public class FinalTest {
                 }
             }
         }
+        @Override
+        public void createBoundingBox() {
+            double minX = start.getX() - 40
+                    ,minY = start.getY() - 10
+                    ,minZ = start.getZ()
+                    ,maxX = start.getX() + 40
+                    ,maxY = start.getY() + 10
+                    ,maxZ = start.getZ() + 50;
+            box = new BoundingBox(new Point(minX, minY, minZ), new Point(maxX, maxY, maxZ));
+        }
+
     }
 
     class RhombusesGrid extends Geometries {
-        RhombusesGrid(Point start, Vector v1, Vector v2, int size1, int size2, int areaSize1, int areaSize2,  Color color, Material material) {
+        Point start;
+        RhombusesGrid(Point _start, Vector v1, Vector v2, int size1, int size2, int areaSize1, int areaSize2,  Color color, Material material) {
+            start = _start;
             v1=v1.normalize().scale(size1/2);
             v2=v2.normalize().scale(size2/2);
             Point rCenter;
@@ -144,23 +215,20 @@ public class FinalTest {
                 }
             }
         }
-    }
+        @Override
+        public void createBoundingBox() {
+            double minX = start.getX() - 40
+                    ,minY = start.getY() - 10
+                    ,minZ = start.getZ()
+                    ,maxX = start.getX() + 40
+                    ,maxY = start.getY() + 10
+                    ,maxZ = start.getZ() + 50;
+            box = new BoundingBox(new Point(minX, minY, minZ), new Point(maxX, maxY, maxZ));
 
-    /*
-    class Floor extends Geometries {
-        Floor(Point start, Vector v1, Vector v2, int size, int areaSize1, int areaSize2,  Color color, Material material) {
-            v1=v1.normalize().scale(size);
-            v2=v2.normalize().scale(size);
-            Point rCenter;
-            for (int i = 0; i < areaSize1 / size; i++) {
-                for (int j = 0; j < areaSize2 / size; j++) {
-                    rCenter = start.add(v1.scale(0.04 + 1.04*i)).add(v2.scale(0.04 + 1.04*j)); //the center of the current rhombus.
-                    super.add(new Rec(rCenter, rCenter.add(v1), rCenter.add(v1).add(v2),rCenter.add(v2), color, material));
-                }
-            }
         }
     }
-     */
+
+
     Color randColor() {
         List<Color> colors = new LinkedList<Color>();
         colors.add(new Color(200, 200, 0));
@@ -171,7 +239,6 @@ public class FinalTest {
         Random rand = new Random();
         int i = rand.nextInt(colors.size());
         return colors.get(i);
-        //return new Color(rand.nextInt(200),rand.nextInt(200),rand.nextInt(200));
     }
 
     @Test
@@ -189,9 +256,9 @@ public class FinalTest {
 
         Scene scene = new Scene("pool");
         Camera camera = new Camera(new Point(0, -200, 50), new Vector(0, 10, -1), new Vector(0, 1, 10)) //
-                .setVPSize(250, 250).setVPDistance(200).multiThreadingOn();
-        Camera cameraUp = new Camera(new Point(0, -100, 90), new Vector(0, 10, -9), new Vector(0, 9, 10)) //
-                .setVPSize(250, 250).setVPDistance(170);//.multiThreadingOn();
+                .setVPSize(250, 250).setVPDistance(200);//.multiThreadingOn();
+        Camera cameraUp = new Camera(new Point(0, -100, 99), new Vector(0, 10, -9), new Vector(0, 9, 10)) //
+                .setVPSize(280, 280).setVPDistance(170);//.multiThreadingOn();
         scene.geometries.add(new Plane(new Point(0, 100, 0), new Vector(0, -1, 0)).setEmission(wallE).setMaterial(wallM));
         scene.geometries.add(new Plane(new Point(100, 0, 0), new Vector(-1, 0, 0)).setEmission(wallE).setMaterial(wallM));
         scene.geometries.add(new Plane(new Point(-100, 0, 0), new Vector(1, 0, 0)).setEmission(wallE).setMaterial(wallM));

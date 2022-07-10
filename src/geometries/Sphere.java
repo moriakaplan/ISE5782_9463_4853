@@ -32,6 +32,20 @@ public class Sphere extends Geometry {
     }
 
     /**
+     * create boundary box for the sphere
+     */
+    @Override
+    public void createBoundingBox() {
+        double minX = center.getX() - radius
+            ,minY = center.getY() - radius
+            ,minZ = center.getZ() - radius
+            ,maxX = center.getX() + radius
+            ,maxY = center.getY() + radius
+            ,maxZ = center.getZ() + radius;
+        box = new BoundingBox(new Point(minX, minY, minZ), new Point(maxX, maxY, maxZ));
+    }
+
+    /**
      * getter for center point.
      *
      * @return the point that is the center of the sphere.

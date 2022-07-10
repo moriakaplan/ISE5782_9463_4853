@@ -2,6 +2,7 @@ package geometries;
 
 import primitives.Point;
 import primitives.Ray;
+import primitives.Vector;
 
 import java.util.List;
 import java.util.Objects;
@@ -10,6 +11,111 @@ import java.util.Objects;
  * abstract class for object that we can find intersections on them.
  */
 public abstract class Intersectable {
+    boolean bvh = false;
+    public BoundingBox box;
+
+    /**
+     * class for boundary box
+     */
+    public class BoundingBox {
+        /**
+         * extreme node of box, containing minimal values for each axis
+         */
+        public Point min;
+        /**
+         * extreme node of box, containing maximal values for each axis
+         */
+        public Point max;
+
+        /**
+         * constructor for bounding box
+         *
+         * @param minimums minimal bounding values
+         * @param maximums maximal bounding values
+         */
+        public BoundingBox(Point minimums, Point maximums) {
+            min = minimums;
+            max = maximums;
+        }
+    }
+
+    public Intersectable bvhOn() {
+        if (!bvh) {
+            createBoundingBox();
+        }
+        bvh = true;
+        return this;
+    }
+
+    public Intersectable bvhOff() {
+        bvh = false;
+        return this;
+    }
+
+
+    /**
+     * return true if ray intersects object
+     *
+     * @param ray ray to check
+     * @return whether ray intersects box
+     * code taken from scratchapixel.com
+     * https://www.scratchapixel.com/lessons/3d-basic-rendering/introduction-acceleration-structure/bounding-volume-hierarchy-BVH-part1
+     */
+    public boolean intersectingBox(Ray ray) {
+        if (!bvh || box == null)
+            return true;
+        Vector dir = ray.getDir();
+        Point p0 = ray.getP0();
+        double tmin = (box.min.getX() - p0.getX()) / dir.getX();
+        double tmax = (box.max.getX() - p0.getX()) / dir.getX();
+
+        if (tmin > tmax) {
+            double temp = tmin;
+            tmin = tmax;
+            tmax = temp;
+        }
+
+
+        double tymin = (box.min.getY() - p0.getY()) / dir.getY();
+        double tymax = (box.max.getY() - p0.getY()) / dir.getY();
+
+        if (tymin > tymax) {
+            double temp = tymin;
+            tymin = tymax;
+            tymax = temp;
+        }
+
+        if ((tmin > tymax) || (tymin > tmax))
+            return false;
+
+        if (tymin > tmin)
+            tmin = tymin;
+
+        if (tymax < tmax)
+            tmax = tymax;
+
+        double tzmin = (box.min.getZ() - p0.getZ()) / dir.getZ();
+        double tzmax = (box.max.getZ() - p0.getZ()) / dir.getZ();
+
+        if (tzmin > tzmax) {
+            double temp = tzmin;
+            tzmin = tzmax;
+            tzmax = temp;
+        }
+
+        if ((tmin > tzmax) || (tzmin > tmax))
+            return false;
+
+        if (tzmin > tmin)
+            tmin = tzmin;
+
+        if (tzmax < tmax)
+            tmax = tzmax;
+
+        return true;
+    }
+
+
 
     /**
      * point on specific geometry.
@@ -47,6 +153,8 @@ public abstract class Intersectable {
         }
     }
 
+    public abstract void createBoundingBox();
+
     /**
      * find intersections between the geometry and ray.
      * @param ray
@@ -74,6 +182,8 @@ public abstract class Intersectable {
      * @return the list of intersections in GeoPoint points.
      */
     public List<GeoPoint> findGeoIntersections(Ray ray, double maxDistance){
+        if (bvh && !intersectingBox(ray))
+            return null;
         return findGeoIntersectionsHelper(ray, maxDistance);
     }
 
